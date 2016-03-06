@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+require_relative '../lib/ego/robot.rb'
+require_relative '../lib/ego/listeners/who.rb'
+
+Ego::Robot.interpret ARGV.join(' ')
