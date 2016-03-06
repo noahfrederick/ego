@@ -2,7 +2,10 @@ require_relative 'version'
 require_relative 'options'
 require_relative 'robot'
 
-require_relative 'listeners/who'
+require_relative 'handler/who'
+require_relative 'handler/echo'
+require_relative 'handler/creator'
+require_relative 'handler/default'
 
 module Ego
   # The Ego::Runner class, given an array of arguments, initializes the
@@ -23,7 +26,7 @@ module Ego
       when :version
         puts "ego v#{Ego::VERSION}"
       else
-        Ego::Robot.interpret @options.query
+        Ego::Handler.dispatch Ego::Robot.new, @options.query
       end
     end
   end

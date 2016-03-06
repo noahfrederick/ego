@@ -1,22 +1,19 @@
+require_relative 'handler'
+
 module Ego
   class Robot
-    @@listeners = []
-
-    def self.listen phrase, &action
-      @@listeners << {
-        phrase: phrase,
-        action: action
-      }
-    end
-
     def respond response
       puts response
+      true
     end
 
-    def self.interpret input
-      @@listeners.each do |listener|
-        listener[:action].call(Robot.new) if input.match(listener[:phrase])
-      end
+    def it does
+      puts "*#{does}*"
+      true
+    end
+
+    def continue
+      false
     end
   end
 end
