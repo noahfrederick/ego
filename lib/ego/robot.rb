@@ -17,6 +17,12 @@ module Ego
       true
     end
 
+    def debug message
+      return unless @options.verbose
+      puts "-> #{message}"
+      true
+    end
+
     def continue
       false
     end

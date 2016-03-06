@@ -24,7 +24,7 @@ module Ego
     def handle robot, query
       return false unless matches = query.match(@phrase)
 
-      puts self if robot.options.verbose
+      robot.debug self
 
       if @action.arity == 1
         @action.call(robot)
