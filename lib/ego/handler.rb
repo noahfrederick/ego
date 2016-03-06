@@ -1,5 +1,3 @@
-require_relative 'robot'
-
 module Ego
   class Handler
     include Comparable
