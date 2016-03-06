@@ -7,9 +7,14 @@ Gem::Specification.new do |spec|
   spec.name          = "ego"
   spec.version       = Ego::VERSION
   spec.authors       = ["Noah Frederick"]
-  spec.email         = ["hi@noahfrederick.com"]
+  spec.email         = ["acc.rubygems@noahfrederick.com"]
   spec.summary       = %q{An extensible personal command-line assistant}
-  spec.description   = %q{Ego is a personal command-line assistant that provides a flexible, natural language interface (sort of) for interacting with other programs.}
+  spec.description   = <<-EOF
+    Ego is a personal command-line assistant that provides a flexible, natural
+    language interface (sort of) for interacting with other programs. Think of
+    it as a single-user IRC bot that can be extended with handlers for various
+    natural-language queries.
+  EOF
   spec.homepage      = "https://github.com/noahfrederick/ego"
   spec.license       = "GPL-3.0+"
 
