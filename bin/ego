@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require_relative '../lib/ego/robot.rb'
-require_relative '../lib/ego/listeners/who.rb'
+require_relative '../lib/ego/runner'
 
-Ego::Robot.interpret ARGV.join(' ')
+runner = Ego::Runner.new(ARGV)
+runner.run
