@@ -42,8 +42,15 @@ module Ego
     end
 
     def self.load handler_names
-      handler_names.each do |handler|
-        require handler unless has(handler)
+      handler_names.each do |path|
+        handler = File.basename(path, '.*')
+        require path unless has(handler)
+      end
+    end
+
+    def self.dump
+      @@handlers.keys.sort.each do |key|
+        puts @@handlers[key]
       end
     end
 

@@ -23,6 +23,10 @@ module Ego
       true
     end
 
+    def stop
+      true
+    end
+
     def continue
       false
     end

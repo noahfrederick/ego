@@ -26,4 +26,8 @@ module Ego::Filesystem
   def builtin_handlers
     Dir[File.expand_path(HANDLER_GLOB, __dir__)]
   end
+
+  def user_handlers
+    Dir[File.expand_path(HANDLER_GLOB, config)]
+  end
 end
