@@ -24,8 +24,12 @@ module Ego
     end
 
     def handle robot, query
-      return false unless query.match(@phrase)
-      @action.call(robot)
+      return false unless matches = query.match(@phrase)
+      if @action.arity == 1
+        @action.call(robot)
+      else
+        @action.call(robot, matches)
+      end
     end
 
     def self.register handler
