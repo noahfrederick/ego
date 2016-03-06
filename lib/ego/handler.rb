@@ -25,6 +25,9 @@ module Ego
 
     def handle robot, query
       return false unless matches = query.match(@phrase)
+
+      puts self if robot.options.verbose
+
       if @action.arity == 1
         @action.call(robot)
       else
@@ -45,6 +48,9 @@ module Ego
 end
 
 def handle phrase, name: nil, priority: 5, &action
+  handler_path = caller_locations(1, 1)[0].absolute_path
+  name = File.basename(handler_path, '.*') if name.nil?
   handler = Ego::Handler.new(name, phrase, priority, action)
+
   Ego::Handler.register handler
 end
