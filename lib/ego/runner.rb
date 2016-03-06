@@ -4,7 +4,6 @@ require_relative 'robot'
 
 require_relative 'handler/who'
 require_relative 'handler/echo'
-require_relative 'handler/creator'
 require_relative 'handler/default'
 
 module Ego
@@ -26,7 +25,7 @@ module Ego
       when :version
         puts "ego v#{Ego::VERSION}"
       else
-        Ego::Handler.dispatch Ego::Robot.new, @options.query
+        Ego::Handler.dispatch Ego::Robot.new(@options), @options.query
       end
     end
   end

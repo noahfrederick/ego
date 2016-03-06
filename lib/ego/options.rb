@@ -4,6 +4,7 @@ module Ego
   class Options
 
     attr_reader :mode,
+                :robot_name,
                 :verbose,
                 :query
 
@@ -17,7 +18,8 @@ module Ego
 
     def parse(argv)
       OptionParser.new do |opts|
-        opts.banner = "Usage: ego [ options ] query..."
+        @robot_name = opts.program_name.capitalize
+        opts.banner = "Usage: #{opts.program_name} [ options ] query..."
 
         opts.on("-v", "--version", "Print version number") do
           @mode = :version

@@ -1,7 +1,12 @@
-require_relative 'handler'
-
 module Ego
   class Robot
+    attr_reader :name, :options
+
+    def initialize options
+      @name = options.robot_name
+      @options = options
+    end
+
     def respond response
       puts response
       true
