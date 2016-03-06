@@ -2,9 +2,9 @@ module Ego
   class Handler
     include Comparable
 
-    @@handlers = []
+    @@handlers = {}
 
-    attr_reader :priority
+    attr_reader :name, :priority
 
     def initialize name, phrase, priority, action
       @name = name
@@ -34,11 +34,21 @@ module Ego
     end
 
     def self.register handler
-      @@handlers << handler
+      @@handlers[handler.name] = handler
+    end
+
+    def self.has handler_name
+      @@handlers.has_key? handler_name
+    end
+
+    def self.load handler_names
+      handler_names.each do |handler|
+        require handler unless has(handler)
+      end
     end
 
     def self.dispatch robot, query
-      @@handlers.sort.reverse_each do |handler|
+      @@handlers.values.sort.reverse_each do |handler|
         return if handler.handle robot, query
       end
     end
@@ -47,7 +57,8 @@ end
 
 def handle phrase, name: nil, priority: 5, &action
   handler_path = caller_locations(1, 1)[0].absolute_path
-  name = File.basename(handler_path, '.*') if name.nil?
+  handler_basename = File.basename(handler_path, '.*')
+  name = [handler_basename, name].compact.join('.')
   handler = Ego::Handler.new(name, phrase, priority, action)
 
   Ego::Handler.register handler

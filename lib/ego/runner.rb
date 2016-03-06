@@ -23,7 +23,7 @@ module Ego
       when :version
         puts "ego v#{Ego::VERSION}"
       else
-        Ego::Filesystem.require_all_handlers
+        Ego::Handler.load Ego::Filesystem.builtin_handlers
         Ego::Handler.dispatch Ego::Robot.new(@options), @options.query
       end
     end
