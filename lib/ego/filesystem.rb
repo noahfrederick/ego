@@ -1,9 +1,7 @@
-require 'rubygems'
-
 module Ego::Filesystem
   HANDLER_GLOB = 'handler/*.rb'
 
-  BASENAME = Gem::Specification::load('ego.gemspec').name
+  BASENAME = 'ego'
 
   XDG_CACHE_HOME = ENV['XDG_CACHE_HOME'] || File.expand_path('~/.cache')
   XDG_CONFIG_HOME = ENV['XDG_CONFIG_HOME'] || File.expand_path('~/.config')
