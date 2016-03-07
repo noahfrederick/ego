@@ -25,7 +25,7 @@ module Ego
           @mode = :version
         end
 
-        opts.on("-V", "--verbose", "Verbose output") do
+        opts.on("-V", "--verbose", "Include debugging info in output") do
           @verbose = true
         end
 

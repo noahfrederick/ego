@@ -1,3 +1,5 @@
+require_relative 'formatter'
+
 module Ego
   class Handler
     include Comparable
@@ -48,16 +50,14 @@ module Ego
       end
     end
 
-    def self.dump
-      @@handlers.keys.sort.each do |key|
-        puts @@handlers[key]
-      end
-    end
-
     def self.dispatch robot, query
       @@handlers.values.sort.reverse_each do |handler|
         return if handler.handle robot, query
       end
+    end
+
+    def self.handlers
+      @@handlers
     end
   end
 end
