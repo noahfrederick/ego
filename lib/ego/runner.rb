@@ -21,12 +21,21 @@ module Ego
     # #initialize.
     def run
       case @options.mode
+      when :help
+        if @options.usage_error
+          STDERR.puts @options.usage_error, "\n"
+        end
+
+        @formatter.puts @options.usage
+
+        exit(-1) if @options.usage_error
       when :version
         @formatter.puts "ego v#{Ego::VERSION}"
       else
+        robot = Ego::Robot.new(@options, @formatter)
         Ego::Handler.load Ego::Filesystem.user_handlers
         Ego::Handler.load Ego::Filesystem.builtin_handlers
-        Ego::Handler.dispatch Ego::Robot.new(@options, @formatter), @options.query
+        Ego::Handler.dispatch robot, @options.query
       end
     end
   end

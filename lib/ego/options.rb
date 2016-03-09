@@ -6,10 +6,13 @@ module Ego
     attr_reader :mode,
                 :robot_name,
                 :verbose,
-                :query
+                :query,
+                :usage,
+                :usage_error
 
     def initialize(argv)
       @mode = :interpret
+      @verbose = false
       parse(argv)
       @query = argv.join(" ")
     end
@@ -30,16 +33,17 @@ module Ego
         end
 
         opts.on("-h", "--help", "Show this message") do
-          puts opts
-          exit
+          @mode = :help
         end
 
         begin
           argv = ["-h"] if argv.empty?
           opts.parse!(argv)
         rescue OptionParser::ParseError => e
-          STDERR.puts e.message, "\n", opts
-          exit(-1)
+          @usage_error = e.message
+          @mode = :help
+        ensure
+          @usage = opts
         end
       end
     end
