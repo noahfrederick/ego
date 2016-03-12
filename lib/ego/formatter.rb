@@ -24,7 +24,7 @@ module Ego
 
     def self.print_handlers handlers
       handlers.keys.sort.each do |key|
-        STDOUT.puts handlers[key]
+        STDOUT.puts "- #{handlers[key]}"
       end
     end
   end

@@ -1,11 +1,15 @@
-handle /(.*)/, priority: 0 do |robot, matches|
-  robot.respond %Q{I don't understand "#{matches[0]}".}
+Ego::Handler.register do |handler|
+  handler.description = 'let you know when I don\'t understand something'
 
-  STDERR.puts <<-EOF
+  handler.listen /(.*)/, priority: 0
+
+  handler.run do |robot, params|
+    robot.respond %Q{I don't understand "#{params[0]}".}
+
+    STDERR.puts <<-EOF
 Perhaps add a handler to #{Ego::Filesystem.config 'handler/{}.rb'}:
 
-handle /^#{matches[0]}$/i do |robot|
-  # Do it
-end
-EOF
+...
+    EOF
+  end
 end

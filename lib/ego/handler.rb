@@ -1,41 +1,52 @@
+require_relative 'listener'
 require_relative 'formatter'
 
 module Ego
   class Handler
-    include Comparable
-
     @@handlers = {}
+    @@listeners = []
 
-    attr_reader :name, :priority
+    attr_reader :name
+    attr_accessor :description
 
-    def initialize name, phrase, priority, action
+    def initialize name
       @name = name
-      @phrase = phrase
-      @priority = priority
-      @action = action
-    end
-
-    def <=> other
-      @priority <=> other.priority
     end
 
     def to_s
-      "#{@name} handler (priority = #{@priority})"
+      "#{@description}"
     end
 
-    def handle robot, query
-      return false unless matches = query.match(@phrase)
+    def listen pattern, priority: 5, &parser
+      unless block_given?
+        parser = Proc.new { |matches| matches }
+      end
+      @@listeners << Ego::Listener.new(pattern, priority, parser, @name)
+    end
 
-      robot.debug self
+    def run robot = nil, params = nil, &action
+      if block_given?
+        @action = action
+      end
 
-      if @action.arity == 1
+      if robot.nil?
+        return
+      elsif @action.arity == 1
         @action.call(robot)
       else
-        @action.call(robot, matches)
+        @action.call(robot, params)
       end
     end
 
-    def self.register handler
+    def self.register name: nil
+      if name.nil?
+        handler_path = caller_locations(1, 1)[0].absolute_path
+        name = File.basename(handler_path, '.*')
+      end
+
+      handler = Ego::Handler.new(name)
+      yield handler
+
       @@handlers[handler.name] = handler
     end
 
@@ -51,8 +62,10 @@ module Ego
     end
 
     def self.dispatch robot, query
-      @@handlers.values.sort.reverse_each do |handler|
-        return if handler.handle robot, query
+      @@listeners.sort.reverse_each do |listener|
+        if params = listener.match(query)
+          return @@handlers[listener.handler].run(robot, params)
+        end
       end
     end
 
@@ -60,13 +73,4 @@ module Ego
       @@handlers
     end
   end
-end
-
-def handle phrase, name: nil, priority: 5, &action
-  handler_path = caller_locations(1, 1)[0].absolute_path
-  handler_basename = File.basename(handler_path, '.*')
-  name = [handler_basename, name].compact.join('.')
-  handler = Ego::Handler.new(name, phrase, priority, action)
-
-  Ego::Handler.register handler
 end

@@ -1,9 +1,14 @@
 require_relative '../handler'
 
-handle /^(show me|show|list)\s+(handlers|what you can do)$/i do |robot|
-  robot.respond 'Here are all the things I know how to do:'
+Ego::Handler.register do |handler|
+  handler.description = 'tell you what I can do'
 
-  Ego::Formatter.print_handlers Ego::Handler.handlers
+  handler.listen /^(show me|show|list)\s+(handlers|what you can do|what you are able to do|what you do)$/i
+  handler.listen /^what (?:can you|are you able to|do you) (?:do|handle)\??$/i
 
-  robot.stop
+  handler.run do |robot|
+    robot.respond 'I know how to...'
+
+    Ego::Formatter.print_handlers Ego::Handler.handlers
+  end
 end
