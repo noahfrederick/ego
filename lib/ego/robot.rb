@@ -10,26 +10,15 @@ module Ego
 
     def respond message
       @formatter.robot_respond message
-      true
     end
 
     def it message
       @formatter.robot_action message
-      true
     end
 
     def debug message
       return unless @options.verbose
       @formatter.debug message
-      true
-    end
-
-    def stop
-      true
-    end
-
-    def continue
-      false
     end
   end
 end
