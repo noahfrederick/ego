@@ -1,4 +1,4 @@
-require_relative '../../lib/ego/options'
+require 'ego/options'
 
 RSpec.describe Ego::Options do
   it 'defaults to interpret-mode' do
