@@ -1,5 +1,7 @@
 # Ego
 
+[![Gem Version](https://badge.fury.io/rb/ego.svg)](https://badge.fury.io/rb/ego)
+
 Ego is a personal command-line assistant that provides a flexible, natural
 language interface (sort of) for interacting with other programs. Think of
 it as a single-user IRC bot that can be extended with handlers for various
