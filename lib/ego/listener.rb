@@ -1,4 +1,5 @@
 module Ego
+  # Listeners map user queries to handlers.
   class Listener
     include Comparable
 
@@ -16,7 +17,7 @@ module Ego
     end
 
     def match query
-      return false unless matches = @pattern.match(query)
+      return false unless (matches = @pattern.match(query))
 
       @parser.call matches
     end
