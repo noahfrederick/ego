@@ -1,8 +1,4 @@
-require_relative 'version'
-require_relative 'options'
-require_relative 'filesystem'
-require_relative 'robot'
-require_relative 'handler'
+require_relative '../ego'
 
 module Ego
   # The Ego::Runner class, given an array of arguments, initializes the

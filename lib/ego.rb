@@ -1,5 +1,5 @@
-require "ego/version"
-
-module Ego
-  # Your code goes here...
-end
+require_relative 'ego/version'
+require_relative 'ego/options'
+require_relative 'ego/filesystem'
+require_relative 'ego/robot'
+require_relative 'ego/handler'
