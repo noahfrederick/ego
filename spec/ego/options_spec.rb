@@ -17,8 +17,15 @@ RSpec.describe Ego::Options do
   end
 
   it 'defaults to help-mode with no arguments' do
+    $0 = 'ego'
     opts = Ego::Options.new([])
     expect(opts.mode).to eq(:help)
+  end
+
+  it 'does not default to help-mode when running in shell mode' do
+    $0 = 'ego-shell'
+    opts = Ego::Options.new([])
+    expect(opts.mode).not_to eq(:help)
   end
 
   it 'defaults to not verbose' do

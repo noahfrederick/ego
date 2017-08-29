@@ -37,7 +37,7 @@ module Ego
         end
 
         begin
-          argv = ["-h"] if argv.empty?
+          argv = ["-h"] if argv.empty? && opts.program_name !~ /shell/
           opts.parse!(argv)
         rescue OptionParser::ParseError => e
           @usage_error = e.message

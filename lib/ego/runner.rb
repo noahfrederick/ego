@@ -28,11 +28,17 @@ module Ego
       when :version
         @formatter.puts "ego v#{Ego::VERSION}"
       else
-        robot = Ego::Robot.new(@options, @formatter)
-        Ego::Handler.load Ego::Filesystem.user_handlers
-        Ego::Handler.load Ego::Filesystem.builtin_handlers
-        Ego::Handler.dispatch robot, @options.query
+        handle_query
       end
+    end
+
+    protected
+
+    def handle_query
+      robot = Ego::Robot.new(@options, @formatter)
+      Ego::Handler.load Ego::Filesystem.user_handlers
+      Ego::Handler.load Ego::Filesystem.builtin_handlers
+      Ego::Handler.dispatch robot, @options.query
     end
   end
 end
