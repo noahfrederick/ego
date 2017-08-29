@@ -58,11 +58,16 @@ module Ego
     def start_repl
       require 'readline'
 
+      # Store the state of the terminal
+      stty_save = `stty -g`.chomp
+
       loop do
         query = prompt
         break if query.nil? || query.strip =~ QUIT
         handle_query query.strip
       end
+    rescue Interrupt => e
+      system('stty', stty_save) # Restore state
     end
   end
 end
