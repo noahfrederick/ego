@@ -24,6 +24,10 @@ module Ego
         @robot_name = opts.program_name.capitalize
         opts.banner = "Usage: #{opts.program_name} [ options ] query..."
 
+        opts.on("-s", "--shell", "Start in REPL-mode") do
+          @mode = :shell
+        end
+
         opts.on("-v", "--version", "Print version number") do
           @mode = :version
         end
@@ -37,7 +41,7 @@ module Ego
         end
 
         begin
-          argv = ["-h"] if argv.empty? && opts.program_name !~ /shell/
+          argv = ["-h"] if argv.empty?
           opts.parse!(argv)
         rescue OptionParser::ParseError => e
           @usage_error = e.message

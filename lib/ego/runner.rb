@@ -4,6 +4,9 @@ module Ego
   # The Ego::Runner class, given an array of arguments, initializes the
   # required objects and executes the request.
   class Runner
+    PROMPT = 'ego, '.green.freeze
+    QUIT = /^q(uit)?|exit|(good)?bye$/.freeze
+
     # Takes an array of arguments and parses them into options:
     #
     #   runner = Ego::Runner.new(ARGV)
@@ -27,18 +30,39 @@ module Ego
         exit(-1) if @options.usage_error
       when :version
         @formatter.puts "ego v#{Ego::VERSION}"
+      when :shell
+        init_robot
+        start_repl
       else
-        handle_query
+        init_robot
+        handle_query @options.query
       end
     end
 
     protected
 
-    def handle_query
-      robot = Ego::Robot.new(@options, @formatter)
+    def init_robot
+      @robot = Ego::Robot.new(@options, @formatter)
       Ego::Handler.load Ego::Filesystem.user_handlers
       Ego::Handler.load Ego::Filesystem.builtin_handlers
-      Ego::Handler.dispatch robot, @options.query
+    end
+
+    def handle_query(query)
+      Ego::Handler.dispatch @robot, query
+    end
+
+    def prompt
+      Readline.readline(PROMPT, true)
+    end
+
+    def start_repl
+      require 'readline'
+
+      loop do
+        query = prompt
+        break if query.nil? || query.strip =~ QUIT
+        handle_query query.strip
+      end
     end
   end
 end

@@ -21,7 +21,7 @@ Ego responds to natural-language queries at the command-line:
 
 If you want to interact with ego as a REPL, try:
 
-    $ ego-shell
+    $ ego --shell
 
 ## Extending
 
