@@ -108,7 +108,7 @@ execute any Ruby scripts in this directory indiscriminately.
 
 ## License
 
-Copyright (C) 2016  Noah Frederick
+Copyright (C) 2016-2017  Noah Frederick
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
