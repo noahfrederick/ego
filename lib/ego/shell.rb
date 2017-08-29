@@ -5,6 +5,7 @@ module Ego
   # The Ego::Shell class executes requests as a REPL.
   class Shell
     PROMPT = 'ego, '.green.freeze
+    QUIT = /^q(uit)?|exit|(good)?bye$/.freeze
 
     def initialize
       @formatter = Ego::Formatter.new
@@ -14,14 +15,14 @@ module Ego
     end
 
     def prompt
-      Readline.readline(PROMPT, true).strip
+      Readline.readline(PROMPT, true)
     end
 
     def run
       loop do
         line = prompt
-        break if line =~ /^q(uit)?|exit|(good)?bye$/
-        run_line line.split
+        break if line.nil? || line.strip =~ QUIT
+        run_line line.strip.split
       end
     end
 
