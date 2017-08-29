@@ -6,6 +6,11 @@ RSpec.describe Ego::Options do
     expect(opts.mode).to eq(:interpret)
   end
 
+  it 'can be set to shell-mode' do
+    opts = Ego::Options.new(['-s'])
+    expect(opts.mode).to eq(:shell)
+  end
+
   it 'can be set to version-mode' do
     opts = Ego::Options.new(['-v'])
     expect(opts.mode).to eq(:version)
