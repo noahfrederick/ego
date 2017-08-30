@@ -31,4 +31,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "guard-rspec"
 
   spec.add_runtime_dependency "colorize", "~> 0.7"
+  spec.add_runtime_dependency "hooks", "~> 0.4"
 end

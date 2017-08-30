@@ -25,23 +25,22 @@ module Ego
     end
 
     def run(robot = nil, params = nil, &action)
-      if block_given?
-        @action = action
-      end
+      @action = action if block_given?
+      return if robot.nil?
 
-      if robot.nil?
-        return
-      elsif @action.arity == 1
+      robot.run_hook :before_run
+      if @action.arity == 1
         @action.call(robot)
       else
         @action.call(robot, params)
       end
+      robot.run_hook :after_run
     end
 
-    def self.register(name: nil)
+    def self.register(name = nil)
       if name.nil?
-        handler_path = caller_locations(1, 1)[0].absolute_path
-        name = File.basename(handler_path, '.*')
+        path = caller_locations(1, 1)[0].absolute_path
+        name = File.basename(path, '.*')
       end
 
       handler = Ego::Handler.new(name)
@@ -50,14 +49,14 @@ module Ego
       @@handlers[handler.name] = handler
     end
 
-    def self.has(handler_name)
-      @@handlers.has_key? handler_name
+    def self.has(name)
+      @@handlers.has_key?(name)
     end
 
-    def self.load(handler_names)
-      handler_names.each do |path|
-        handler = File.basename(path, '.*')
-        require path unless has(handler)
+    def self.load(handlers)
+      handlers.each do |path|
+        name = File.basename(path, '.*')
+        require path unless has(name)
       end
     end
 

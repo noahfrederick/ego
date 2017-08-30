@@ -1,5 +1,6 @@
 module Ego::Filesystem
   HANDLER_GLOB = 'handler/*.rb'
+  PLUGIN_GLOB = 'plugin/*.rb'
 
   BASENAME = 'ego'
 
@@ -27,5 +28,9 @@ module Ego::Filesystem
 
   def user_handlers
     Dir[File.expand_path(HANDLER_GLOB, config)]
+  end
+
+  def user_plugins
+    Dir[File.expand_path(PLUGIN_GLOB, config)]
   end
 end

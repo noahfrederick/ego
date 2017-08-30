@@ -30,20 +30,30 @@ module Ego
       when :version
         Printer.puts "ego v#{Ego::VERSION}"
       when :shell
-        init_robot
-        start_repl
+        start_shell
       else
-        init_robot
-        handle_query @options.query
+        handle_single_query @options.query
       end
     end
 
     protected
 
     def init_robot
-      @robot = Ego::Robot.new(@options)
+      Ego::Plugin.load Ego::Filesystem.user_plugins
       Ego::Handler.load Ego::Filesystem.user_handlers
       Ego::Handler.load Ego::Filesystem.builtin_handlers
+
+      @robot = Ego::Robot.new(@options)
+    end
+
+    def shutdown_robot
+      @robot.shutdown
+    end
+
+    def handle_single_query(query)
+      init_robot
+      handle_query(query)
+      shutdown_robot
     end
 
     def handle_query(query)
@@ -54,10 +64,12 @@ module Ego
       Readline.readline(PROMPT, true)
     end
 
-    def start_repl
+    def start_shell
       require 'readline'
 
-      # Store the state of the terminal
+      init_robot
+
+      # Save the state of the terminal
       stty_save = `stty -g`.chomp
 
       loop do
@@ -67,6 +79,8 @@ module Ego
       end
     rescue Interrupt => e
       system('stty', stty_save) # Restore state
+    ensure
+      shutdown_robot
     end
   end
 end
