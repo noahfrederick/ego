@@ -9,16 +9,16 @@ module Ego::Filesystem
 
   module_function
 
-  def cache path = ''
-    File.join XDG_CACHE_HOME, BASENAME, path
+  def cache(path = '')
+    File.join(XDG_CACHE_HOME, BASENAME, path)
   end
 
-  def config path = ''
-    File.join XDG_CONFIG_HOME, BASENAME, path
+  def config(path = '')
+    File.join(XDG_CONFIG_HOME, BASENAME, path)
   end
 
-  def data path = ''
-    File.join XDG_DATA_HOME, BASENAME, path
+  def data(path = '')
+    File.join(XDG_DATA_HOME, BASENAME, path)
   end
 
   def builtin_handlers

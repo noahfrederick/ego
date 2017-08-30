@@ -5,7 +5,7 @@ module Ego
 
     attr_accessor :pattern, :priority, :parser, :handler
 
-    def initialize pattern, priority, parser, handler
+    def initialize(pattern, priority, parser, handler)
       @pattern = pattern
       @priority = priority
       @parser = parser
@@ -16,7 +16,7 @@ module Ego
       @priority <=> other.priority
     end
 
-    def match query
+    def match(query)
       return false unless (matches = @pattern.match(query))
 
       @parser.call matches
