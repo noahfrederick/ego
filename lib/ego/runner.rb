@@ -39,9 +39,12 @@ module Ego
     protected
 
     def init_robot
-      Ego::Plugin.load Ego::Filesystem.user_plugins
-      Ego::Handler.load Ego::Filesystem.user_handlers
       Ego::Handler.load Ego::Filesystem.builtin_handlers
+
+      if @options.plugins
+        Ego::Plugin.load Ego::Filesystem.user_plugins
+        Ego::Handler.load Ego::Filesystem.user_handlers
+      end
 
       @robot = Ego::Robot.new(@options)
     end

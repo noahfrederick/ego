@@ -26,6 +26,16 @@ RSpec.describe Ego::Options do
     expect(opts.mode).to eq(:help)
   end
 
+  it 'defaults to loading user plugins' do
+    opts = Ego::Options.new(['foo'])
+    expect(opts.plugins).to be true
+  end
+
+  it 'can be set to not load user plugins' do
+    opts = Ego::Options.new(['-n', 'foo'])
+    expect(opts.plugins).to be false
+  end
+
   it 'defaults to not verbose' do
     opts = Ego::Options.new(['foo'])
     expect(opts.verbose).to be false

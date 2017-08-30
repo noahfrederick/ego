@@ -4,6 +4,7 @@ module Ego
   class Options
 
     attr_reader :mode,
+                :plugins,
                 :robot_name,
                 :verbose,
                 :query,
@@ -12,6 +13,7 @@ module Ego
 
     def initialize(argv)
       @mode = :interpret
+      @plugins = true
       @verbose = false
       parse(argv)
       @query = argv.join(" ")
@@ -23,6 +25,10 @@ module Ego
       OptionParser.new do |opts|
         @robot_name = opts.program_name.capitalize
         opts.banner = "Usage: #{opts.program_name} [ options ] query..."
+
+        opts.on("-n", "--no-plugins", "Skip loading user plug-ins") do
+          @plugins = false
+        end
 
         opts.on("-s", "--shell", "Start in REPL-mode") do
           @mode = :shell
