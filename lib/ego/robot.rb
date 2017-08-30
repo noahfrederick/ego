@@ -1,24 +1,18 @@
+require_relative 'printer'
+
 module Ego
   class Robot
+    include Printer
+
     attr_reader :name, :options
 
-    def initialize(options, formatter)
+    def initialize(options)
       @name = options.robot_name
       @options = options
-      @formatter = formatter
     end
 
-    def respond(message, *replacements)
-      @formatter.robot_respond message, *replacements
-    end
-
-    def it(message)
-      @formatter.robot_action message
-    end
-
-    def debug(message, *replacements)
-      return unless @options.verbose
-      @formatter.debug message, *replacements
+    def verbose?
+      @options.verbose
     end
   end
 end

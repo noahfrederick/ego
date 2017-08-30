@@ -13,7 +13,6 @@ module Ego
     #
     def initialize(argv)
       @options = Options.new(argv)
-      @formatter = Ego::Formatter.new
     end
 
     # Run the appropriate action based on the arguments provided to
@@ -22,14 +21,14 @@ module Ego
       case @options.mode
       when :help
         if @options.usage_error
-          STDERR.puts @options.usage_error, "\n"
+          Printer.errs @options.usage_error, "\n"
         end
 
-        @formatter.puts @options.usage
+        Printer.puts @options.usage
 
         exit(-1) if @options.usage_error
       when :version
-        @formatter.puts "ego v#{Ego::VERSION}"
+        Printer.puts "ego v#{Ego::VERSION}"
       when :shell
         init_robot
         start_repl
@@ -42,7 +41,7 @@ module Ego
     protected
 
     def init_robot
-      @robot = Ego::Robot.new(@options, @formatter)
+      @robot = Ego::Robot.new(@options)
       Ego::Handler.load Ego::Filesystem.user_handlers
       Ego::Handler.load Ego::Filesystem.builtin_handlers
     end

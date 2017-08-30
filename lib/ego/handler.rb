@@ -1,5 +1,5 @@
 require_relative 'listener'
-require_relative 'formatter'
+require_relative 'printer'
 
 module Ego
   class Handler

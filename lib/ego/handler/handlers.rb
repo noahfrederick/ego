@@ -10,6 +10,6 @@ Ego::Handler.register do |handler|
   handler.run do |robot|
     robot.respond 'I know how to...'
 
-    Ego::Formatter.print_handlers Ego::Handler.handlers
+    Ego::Printer.print_handlers Ego::Handler.handlers
   end
 end
