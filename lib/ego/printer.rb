@@ -31,11 +31,11 @@ module Ego
     end
 
     def puts(*message)
-      $stdout.puts *message
+      $stdout.puts(*message)
     end
 
     def errs(*message)
-      $stderr.puts *message
+      $stderr.puts(*message)
     end
 
     def verbose?
