@@ -1,75 +1,36 @@
-require_relative 'listener'
-require_relative 'printer'
+require_relative 'robot_error'
 
 module Ego
+  # Listeners map user queries to handlers.
   class Handler
-    @@handlers = {}
-    @@listeners = []
+    include Comparable
 
-    attr_reader :name
-    attr_accessor :description
+    attr_reader :condition, :action, :priority
 
-    def initialize(name)
-      @name = name
+    def initialize(condition, action, priority = 5)
+      @condition = normalize(condition)
+      @action = action
+      @priority = priority
     end
 
-    def to_s
-      "#{@description}"
+    def <=> other
+      @priority <=> other.priority
     end
 
-    def listen(pattern, priority: 5, &parser)
-      unless block_given?
-        parser = Proc.new { |matches| matches }
-      end
-      @@listeners << Ego::Listener.new(pattern, priority, parser, @name)
+    def handle(query)
+      @condition.call(query) || false
     end
 
-    def run(robot = nil, params = nil, &action)
-      @action = action if block_given?
-      return if robot.nil?
+    protected
 
-      robot.run_hook :before_run
-      if @action.arity == 1
-        @action.call(robot)
-      else
-        @action.call(robot, params)
-      end
-      robot.run_hook :after_run
-    end
-
-    def self.register(name = nil)
-      if name.nil?
-        path = caller_locations(1, 1)[0].absolute_path
-        name = File.basename(path, '.*')
+    def normalize(condition)
+      if condition.respond_to?(:match)
+        # Must assign regexp to avoid recursion in lambda
+        regexp = condition
+        condition = ->(query) { regexp.match(query) }
       end
 
-      handler = Ego::Handler.new(name)
-      yield handler
-
-      @@handlers[handler.name] = handler
-    end
-
-    def self.has(name)
-      @@handlers.has_key?(name)
-    end
-
-    def self.load(handlers)
-      handlers.each do |path|
-        name = File.basename(path, '.*')
-        require path unless has(name)
-      end
-    end
-
-    def self.dispatch(robot, query)
-      @@listeners.sort.reverse_each do |listener|
-        if params = listener.match(query)
-          return @@handlers[listener.handler].run(robot, params)
-        end
-      end
-    end
-
-    def self.handlers
-      @@handlers
+      condition
     end
   end
 end

@@ -1,24 +1,32 @@
 module Ego
-  module Plugin
+  class Plugin
     @@plugins = {}
 
-    module_function
+    attr_reader :name, :body, :builtin
 
-    def self.load(plugins)
-      plugins.each { |plugin| require plugin }
+    def initialize(name, body, builtin: false)
+      @name = name
+      @body = body
+      @builtin = builtin
     end
 
-    def self.register(name = nil, &body)
-      if name.nil?
-        path = caller_locations(1, 1)[0].absolute_path
-        name = File.basename(path, '.*')
+    def self.load(paths)
+      paths.each { |path| require path }
+    end
+
+    def self.register(name, body, builtin: false)
+      @@plugins[name] = Plugin.new(name, body, builtin: builtin)
+    end
+
+    def self.decorate(obj)
+      @@plugins.each do |name, plugin|
+        if obj.respond_to?(:context)
+          obj.context = plugin
+        end
+        plugin.body.call(obj)
       end
 
-      @@plugins[name] = body
-    end
-
-    def init_plugins
-      @@plugins.each { |name, body| body.call(self) }
+      obj
     end
   end
 end

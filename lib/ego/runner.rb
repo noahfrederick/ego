@@ -1,4 +1,5 @@
 require_relative '../ego'
+require_relative 'options'
 
 module Ego
   # The Ego::Runner class, given an array of arguments, initializes the
@@ -30,47 +31,39 @@ module Ego
       when :version
         Printer.puts "ego v#{Ego::VERSION}"
       when :shell
-        start_shell
+        start_shell(robot_factory)
       else
-        handle_single_query @options.query
+        handle_query(robot_factory, @options.query)
       end
+    rescue RobotError => e
+      Printer.errs e.message
+      exit(-2)
     end
 
     protected
 
-    def init_robot
-      Ego::Handler.load Ego::Filesystem.builtin_handlers
+    def robot_factory
+      Plugin.load Filesystem.builtin_plugins
 
       if @options.plugins
-        Ego::Plugin.load Ego::Filesystem.user_plugins
-        Ego::Handler.load Ego::Filesystem.user_handlers
+        Plugin.load Filesystem.user_plugins
       end
 
-      @robot = Ego::Robot.new(@options)
+      Plugin.decorate(Robot.new(@options)).ready
     end
 
-    def shutdown_robot
-      @robot.shutdown
-    end
-
-    def handle_single_query(query)
-      init_robot
-      handle_query(query)
-      shutdown_robot
-    end
-
-    def handle_query(query)
-      Ego::Handler.dispatch @robot, query
+    def handle_query(robot, query)
+      robot.handle(query)
+    ensure
+      robot.shutdown
     end
 
     def prompt
       Readline.readline(PROMPT, true)
     end
 
-    def start_shell
+    def start_shell(robot)
       require 'readline'
-
-      init_robot
 
       # Save the state of the terminal
       stty_save = `stty -g`.chomp
@@ -78,12 +71,13 @@ module Ego
       loop do
         query = prompt
         break if query.nil? || query.strip =~ QUIT
-        handle_query query.strip
+        robot.handle(query.strip)
       end
     rescue Interrupt => e
       system('stty', stty_save) # Restore state
+      robot.say e.message
     ensure
-      shutdown_robot
+      robot.shutdown
     end
   end
 end

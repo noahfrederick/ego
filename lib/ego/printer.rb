@@ -4,31 +4,25 @@ module Ego
   module Printer
     String.disable_colorization = !$stdout.isatty
 
-    def respond(message, *replacements)
-      message = sprintf(message, *replacements)
-      message = message[0].upcase + message[1..-1]
-
-      puts message.yellow
+    def say(message, *replacements)
+      puts sprintf(message, *replacements).bold
     end
 
-    def it(message)
+    def emote(message)
       puts "*#{message}*".magenta
     end
 
-    def debug(message, *replacements)
-      return unless verbose?
-      message = sprintf(message, *replacements)
-
-      errs message
+    def alert(message, *replacements)
+      errs sprintf(message, *replacements).light_red
     end
+
+    def debug(message, *replacements)
+      errs sprintf(message, *replacements) if verbose?
+    end
+
+    def verbose?; false; end
 
     module_function
-
-    def print_handlers(handlers)
-      handlers.keys.sort.each do |key|
-        puts "- #{handlers[key]}"
-      end
-    end
 
     def puts(*message)
       $stdout.puts(*message)
@@ -36,10 +30,6 @@ module Ego
 
     def errs(*message)
       $stderr.puts(*message)
-    end
-
-    def verbose?
-      false
     end
   end
 end

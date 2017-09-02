@@ -1,64 +1,182 @@
 require 'ego/robot'
 
 RSpec.describe Ego::Robot do
-  it 'sets its name' do
-    options = double('Ego::Options')
-    allow(options).to receive(:verbose)
-    expect(options).to receive_messages(robot_name: 'foo')
+  let(:name) { 'TestBot' }
+  let(:options) { double('Ego::Options') }
+  let(:plugin) { double('Ego::Plugin') }
+  subject do
+    allow(options).to receive_messages({
+      robot_name: name,
+      verbose: false,
+    })
 
-    robot = Ego::Robot.new(options)
-    expect(robot.name).to eq('foo')
+    described_class.new(options)
   end
 
-  describe '#debug' do
-    context 'in non-verbose mode' do
-      before(:example) do
-        @options = double('Ego::Options')
-        allow(@options).to receive_messages(robot_name: 'foo', verbose: false)
-      end
-
-      it 'does nothing' do
-        robot = Ego::Robot.new(@options)
-        expect { robot.debug('foo') }.not_to output.to_stderr
-      end
+  context 'on initization' do
+    it 'sets its name' do
+      expect(subject.name).to eq(name)
     end
 
-    context 'in verbose mode' do
-      before(:example) do
-        @options = double('Ego::Options')
-        allow(@options).to receive_messages(robot_name: 'foo', verbose: true)
-      end
+    it 'exposes the passed options object' do
+      expect(subject.options).to be options
+    end
 
-      it 'prints the message to STDERR' do
-        robot = Ego::Robot.new(@options)
-        expect { robot.debug('foo') }.to output.to_stderr
-      end
+    it 'has no capabilities' do
+      expect(subject.capabilities).to be_empty
     end
   end
 
-  describe '#verbose?' do
-    context 'in non-verbose mode' do
-      before(:example) do
-        @options = double('Ego::Options')
-        allow(@options).to receive_messages(robot_name: 'foo', verbose: false)
-      end
+  describe '#on_ready' do
+    it 'is defined' do
+      expect(subject.respond_to?(:on_ready)).to be true
+    end
 
-      it 'returns false' do
-        robot = Ego::Robot.new(@options)
-        expect(robot.verbose?).to be false
+    it 'can be hooked into' do
+      subject.on_ready { print 'Ready!' }
+      expect { subject.run_hook :on_ready }.to output('Ready!').to_stdout
+    end
+  end
+
+  describe '#on_shutdown' do
+    it 'is defined' do
+      expect(subject.respond_to?(:on_shutdown)).to be true
+    end
+
+    it 'can be hooked into' do
+      subject.on_shutdown { print 'Bye!' }
+      expect { subject.run_hook :on_shutdown }.to output('Bye!').to_stdout
+    end
+  end
+
+  describe '#ready' do
+    it 'runs the on_ready hook' do
+      subject.on_ready { print 'Ready!' }
+      expect { subject.ready }.to output('Ready!').to_stdout
+    end
+
+    it 'is chainable' do
+      expect(subject.ready).to be subject
+    end
+  end
+
+  describe '#shutdown' do
+    it 'runs the on_shutdown hook' do
+      subject.on_shutdown { print 'Bye!' }
+      expect { subject.shutdown }.to output('Bye!').to_stdout
+    end
+  end
+
+  describe '#provide' do
+    it 'is an alias for #define_singleton_method' do
+      expect(subject.respond_to?(:foo)).to be false
+      subject.provide(:foo) { :bar }
+      expect(subject.respond_to?(:foo)).to be true
+      expect(subject.foo).to eq(:bar)
+    end
+  end
+
+  describe '#can' do
+    context 'without a plug-in context set' do
+      it 'fails' do
+        expect { subject.can('fail') }.to raise_error(Ego::RobotError)
       end
     end
 
-    context 'in verbose mode' do
-      before(:example) do
-        @options = double('Ego::Options')
-        allow(@options).to receive_messages(robot_name: 'foo', verbose: true)
+    context 'with a plug-in context set' do
+      let(:plugin_name) { 'my_plug' }
+      before do
+        allow(plugin).to receive(:name) { plugin_name }
+        subject.context = plugin
       end
 
-      it 'returns true' do
-        robot = Ego::Robot.new(@options)
-        expect(robot.verbose?).to be true
+      it 'adds a capability' do
+        expect(subject.capabilities).to be_empty
+        subject.can('succeed')
+        expect(subject.capabilities).not_to be_empty
       end
+
+      it 'sets the capability description' do
+        subject.can('succeed')
+        expect(subject.capabilities.last.desc).to eq('succeed')
+      end
+
+      it 'records the plug-in with the capability' do
+        subject.can('succeed')
+        expect(subject.capabilities.last.plugin.name).to eq(plugin_name)
+      end
+    end
+  end
+
+  describe '#on' do
+    context 'given a single condition' do
+      let(:condition) { /^some condition/i }
+      let(:priority) { 9 }
+
+      before do
+        subject.on(condition, priority) { }
+      end
+
+      it 'passes the condition and action to a new handler' do
+        expect(subject.instance_variable_get(:@handlers).count).to eq(1)
+        expect(subject.instance_variable_get(:@handlers).last).to be_instance_of(Ego::Handler)
+      end
+
+      it 'passes the condition and action to a new handler with a priority' do
+        expect(subject.instance_variable_get(:@handlers).count).to eq(1)
+        expect(subject.instance_variable_get(:@handlers).last.priority).to eq(priority)
+      end
+    end
+
+    context 'given a hash' do
+      before do
+        subject.on(
+          ->(q) { 'foo' } => 1,
+          ->(q) { 'bar' } => 2,
+        ) { }
+      end
+
+      it 'creates a new handler for each item' do
+        expect(subject.instance_variable_get(:@handlers).count).to eq(2)
+      end
+
+      it 'uses the keys as conditions' do
+        expect(subject.instance_variable_get(:@handlers).first.condition.call('')).to eq('foo')
+      end
+
+      it 'uses the values as priorities' do
+        expect(subject.instance_variable_get(:@handlers).first.priority).to eq(1)
+      end
+    end
+
+    context 'given no action block' do
+      it 'raises an error' do
+        expect { subject.on(:foo) }.to raise_error(Ego::RobotError)
+      end
+    end
+  end
+
+  describe '#run_action' do
+    it 'calls the action with supplied parameters' do
+      expect(subject.run_action(->(params) { params }, 'foo')).to eq('foo')
+    end
+
+    it 'executes the action in the context of the robot instance' do
+      expect(subject.run_action(->(params) { name }, 'foo')).to eq(subject.name)
+    end
+  end
+
+  describe '#handle' do
+    before do
+      subject.on(
+        ->(q) { :three if 'bar'.match(q) } => 3,
+        ->(q) { :two if 'foo'.match(q) } => 2,
+        ->(q) { :one if 'foo'.match(q) } => 1,
+      ) { |params| params }
+    end
+
+    it 'chooses the highest-priority handler that matches the query' do
+      expect(subject.handle('foo')).to eq(:two)
     end
   end
 end
