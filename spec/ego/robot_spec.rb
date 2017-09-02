@@ -264,5 +264,10 @@ RSpec.describe Ego::Robot do
       subject.on('xxx') { }
       expect { subject.handle('xxx') }.not_to output('Oops!').to_stdout
     end
+
+    it 'receives the query' do
+      subject.on_unhandled_query { |query| print query }
+      expect { subject.handle('xxx') }.to output('Oops!xxx').to_stdout
+    end
   end
 end
