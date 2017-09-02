@@ -72,6 +72,7 @@ module Ego
       end
 
       run_hook :on_unhandled_query, query
+      false
     end
   end
 end

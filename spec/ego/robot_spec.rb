@@ -220,6 +220,10 @@ RSpec.describe Ego::Robot do
     it 'chooses the highest-priority handler that matches the query' do
       expect(subject.handle('foo')).to eq(:two)
     end
+
+    it 'returns false when no handlers match' do
+      expect(subject.handle('xxx')).to be false
+    end
   end
 
   describe '#before_handle_query' do
