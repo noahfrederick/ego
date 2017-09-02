@@ -13,7 +13,7 @@ module Ego
 
     alias_method :provide, :define_singleton_method
 
-    define_hooks :on_ready, :on_shutdown
+    define_hooks :on_ready, :on_shutdown, :on_unhandled_query
 
     def initialize(options)
       @name = options.robot_name
@@ -63,6 +63,8 @@ module Ego
           return run_action(handler.action, params)
         end
       end
+
+      run_hook :on_unhandled_query
     end
   end
 end

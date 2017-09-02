@@ -179,4 +179,27 @@ RSpec.describe Ego::Robot do
       expect(subject.handle('foo')).to eq(:two)
     end
   end
+
+  describe '#on_unhandled_query' do
+    before do
+      subject.on_unhandled_query { print 'Oops!' }
+    end
+
+    it 'is defined' do
+      expect(subject.respond_to?(:on_unhandled_query)).to be true
+    end
+
+    it 'can be hooked into' do
+      expect { subject.run_hook :on_unhandled_query }.to output('Oops!').to_stdout
+    end
+
+    it 'is run by #handle when no handlers match' do
+      expect { subject.handle('xxx') }.to output('Oops!').to_stdout
+    end
+
+    it 'is not run by #handle when the query is handled' do
+      subject.on('xxx') { }
+      expect { subject.handle('xxx') }.not_to output('Oops!').to_stdout
+    end
+  end
 end
