@@ -166,6 +166,48 @@ RSpec.describe Ego::Robot do
     end
   end
 
+  describe '#before_action' do
+    it 'is defined' do
+      expect(subject.respond_to?(:before_action)).to be true
+    end
+
+    it 'can be hooked into' do
+      subject.before_action { print 'Before!' }
+      expect { subject.run_hook :before_action }.to output('Before!').to_stdout
+    end
+
+    it 'is run by #run_action' do
+      subject.before_action { print 'Before!' }
+      expect { subject.run_action(->(p) { true }, 'p') }.to output('Before!').to_stdout
+    end
+
+    it 'receives the action and action parameters' do
+      subject.before_action { |action, params| print params }
+      expect { subject.run_action(->(p) { true }, 'p') }.to output('p').to_stdout
+    end
+  end
+
+  describe '#after_action' do
+    it 'is defined' do
+      expect(subject.respond_to?(:after_action)).to be true
+    end
+
+    it 'can be hooked into' do
+      subject.after_action { print 'After!' }
+      expect { subject.run_hook :after_action }.to output('After!').to_stdout
+    end
+
+    it 'is run by #run_action' do
+      subject.after_action { print 'After!' }
+      expect { subject.run_action(->(p) { 'out' }, 'p') }.to output('After!').to_stdout
+    end
+
+    it 'receives the action and action return value' do
+      subject.after_action { |action, result| print result }
+      expect { subject.run_action(->(p) { 'out' }, 'p') }.to output('out').to_stdout
+    end
+  end
+
   describe '#handle' do
     before do
       subject.on(
