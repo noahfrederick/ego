@@ -14,7 +14,7 @@ module Ego
     alias_method :provide, :define_singleton_method
 
     define_hooks :on_ready, :on_shutdown
-    define_hooks :on_unhandled_query
+    define_hooks :before_handle_query, :on_unhandled_query
     define_hooks :before_action, :after_action
 
     def initialize(options)
@@ -63,6 +63,8 @@ module Ego
     end
 
     def handle(query)
+      run_hook :before_handle_query, query
+
       @handlers.sort.reverse_each do |handler|
         if params = handler.handle(query)
           return run_action(handler.action, params)

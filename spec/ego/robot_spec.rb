@@ -222,6 +222,27 @@ RSpec.describe Ego::Robot do
     end
   end
 
+  describe '#before_handle_query' do
+    it 'is defined' do
+      expect(subject.respond_to?(:before_handle_query)).to be true
+    end
+
+    it 'can be hooked into' do
+      subject.before_handle_query { print 'Before!' }
+      expect { subject.run_hook :before_handle_query }.to output('Before!').to_stdout
+    end
+
+    it 'is run by #handle' do
+      subject.before_handle_query { print 'Before!' }
+      expect { subject.handle('xxx') }.to output('Before!').to_stdout
+    end
+
+    it 'receives the query' do
+      subject.before_handle_query { |query| print query }
+      expect { subject.handle('xxx') }.to output('xxx').to_stdout
+    end
+  end
+
   describe '#on_unhandled_query' do
     before do
       subject.on_unhandled_query { print 'Oops!' }
