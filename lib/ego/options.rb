@@ -1,6 +1,7 @@
 require 'optparse'
 
 module Ego
+  # Parse command-line options and set defaults.
   class Options
 
     attr_reader :mode,
@@ -11,6 +12,7 @@ module Ego
                 :usage,
                 :usage_error
 
+    # @param argv [Array] command-line arguments
     def initialize(argv)
       @mode = :interpret
       @plugins = true
@@ -19,8 +21,13 @@ module Ego
       @query = argv.join(" ")
     end
 
-  private
+    private
 
+    # Parse the arguments supplied at the command line and set options
+    # accordingly.
+    #
+    # @param argv [Array] command-line arguments
+    # @return [void]
     def parse(argv)
       OptionParser.new do |opts|
         @robot_name = opts.program_name.capitalize
@@ -57,6 +64,5 @@ module Ego
         end
       end
     end
-
   end
 end

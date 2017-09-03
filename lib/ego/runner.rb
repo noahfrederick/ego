@@ -2,22 +2,28 @@ require_relative '../ego'
 require_relative 'options'
 
 module Ego
-  # The Ego::Runner class, given an array of arguments, initializes the
-  # required objects and executes the request.
+  # The Runner class, given an array of arguments, initializes the required
+  # objects and executes the request.
   class Runner
+    # Prompt to display in shell-mode
     PROMPT = 'ego, '.green.freeze
+    # Pattern that triggers shell-mode to exit
     QUIT = /^q(uit)?|exit|(good)?bye$/.freeze
 
     # Takes an array of arguments and parses them into options:
     #
+    # @example
     #   runner = Ego::Runner.new(ARGV)
     #
+    # @param argv [Array] command-line arguments
     def initialize(argv)
       @options = Options.new(argv)
     end
 
     # Run the appropriate action based on the arguments provided to
-    # #initialize.
+    # `#initialize`.
+    #
+    # @return [void]
     def run
       case @options.mode
       when :help
@@ -42,6 +48,9 @@ module Ego
 
     protected
 
+    # Get a robot and enhance it with plug-ins.
+    #
+    # @return [Robot] a decorated robot instance
     def robot_factory
       Plugin.load Filesystem.builtin_plugins
 
@@ -52,16 +61,28 @@ module Ego
       Plugin.decorate(Robot.new(@options)).ready
     end
 
+    # Handle and single query and shut down.
+    #
+    # @param robot [Robot] the robot to handle the query
+    # @param query [String] the query to handle
+    # @return [void]
     def handle_query(robot, query)
       robot.handle(query)
     ensure
       robot.shutdown
     end
 
+    # Show a prompt and read input from the user.
+    #
+    # @return [String, nil] the user query
     def prompt
       Readline.readline(PROMPT, true)
     end
 
+    # Start a REPL for handling multiple queries in one session.
+    #
+    # @param robot [Robot] the robot to handle the query
+    # @return [void]
     def start_shell(robot)
       require 'readline'
 
