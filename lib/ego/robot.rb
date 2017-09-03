@@ -40,6 +40,8 @@ module Ego
     #
     # Should be called after plug-ins are registered, before handling queries.
     #
+    # @hook on_ready
+    #
     # @return [self]
     def ready
       run_hook :on_ready
@@ -50,6 +52,8 @@ module Ego
     #
     # Should be called after all queries are handled, before program
     # termination.
+    #
+    # @hook on_shutdown
     #
     # @return [void]
     def shutdown
@@ -124,6 +128,9 @@ module Ego
 
     # Run action with given parameters in the context of the robot instance.
     #
+    # @hook before_action
+    # @hook after_action
+    #
     # @param action [#call] the action
     # @param params the action parameters
     # @return result of the action
@@ -136,6 +143,9 @@ module Ego
 
     # Call `#handle` on each registered handler until a truthy value is
     # returned, then run the associated action.
+    #
+    # @hook before_handle_query
+    # @hook on_unhandled_query
     #
     # @param query [String] user query
     # @return [false] if query is not handled
