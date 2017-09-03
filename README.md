@@ -106,6 +106,11 @@ automatically at runtime. Each plug-in goes in it's own file with an `.rb`
 extension (e.g., `~/.config/ego/plugins/my_plugin.rb`). Be careful—ego will
 execute any Ruby scripts in this directory indiscriminately.
 
+### See Also
+
+- [API documentation](http://www.rubydoc.info/gems/ego)
+- [Examples in the wiki](https://github.com/noahfrederick/ego/wiki)
+
 ## License
 
 Copyright (C) 2016-2017  Noah Frederick
