@@ -247,6 +247,29 @@ RSpec.describe Ego::Robot do
     end
   end
 
+  describe '#after_handle_query' do
+    it 'is defined' do
+      expect(subject.respond_to?(:after_handle_query)).to be true
+    end
+
+    it 'can be hooked into' do
+      subject.after_handle_query { print 'After!' }
+      expect { subject.run_hook :after_handle_query }.to output('After!').to_stdout
+    end
+
+    it 'is run by #handle' do
+      subject.on('xxx') { true }
+      subject.after_handle_query { print 'After!' }
+      expect { subject.handle('xxx') }.to output('After!').to_stdout
+    end
+
+    it 'receives the query and handler' do
+      subject.on('xxx') { true }
+      subject.after_handle_query { |query, handler| print query unless handler.nil? }
+      expect { subject.handle('xxx') }.to output('xxx').to_stdout
+    end
+  end
+
   describe '#on_unhandled_query' do
     before do
       subject.on_unhandled_query { print 'Oops!' }

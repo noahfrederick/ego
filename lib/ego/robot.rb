@@ -22,7 +22,7 @@ module Ego
     alias_method :provide, :define_singleton_method
 
     define_hooks :on_ready, :on_shutdown
-    define_hooks :before_handle_query, :on_unhandled_query
+    define_hooks :before_handle_query, :after_handle_query, :on_unhandled_query
     define_hooks :before_action, :after_action
 
     # @param options [Options] the options to create a robot with
@@ -145,6 +145,7 @@ module Ego
     # returned, then run the associated action.
     #
     # @hook before_handle_query
+    # @hook after_handle_query
     # @hook on_unhandled_query
     #
     # @param query [String] user query
@@ -157,7 +158,9 @@ module Ego
 
       @handlers.sort.reverse_each do |handler|
         if params = handler.handle(query)
-          return run_action(handler.action, params)
+          result = run_action(handler.action, params)
+          run_hook :after_handle_query, query, handler
+          return result
         end
       end
 
