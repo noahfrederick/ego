@@ -137,7 +137,7 @@ module Ego
     def run_action(action, params)
       run_hook :before_action, action, params
       result = instance_exec(params, &action)
-      run_hook :after_action, action, result
+      run_hook :after_action, action, params, result
       result
     end
 

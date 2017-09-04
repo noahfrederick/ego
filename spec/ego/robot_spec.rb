@@ -202,9 +202,9 @@ RSpec.describe Ego::Robot do
       expect { subject.run_action(->(p) { 'out' }, 'p') }.to output('After!').to_stdout
     end
 
-    it 'receives the action and action return value' do
-      subject.after_action { |action, result| print result }
-      expect { subject.run_action(->(p) { 'out' }, 'p') }.to output('out').to_stdout
+    it 'receives the action, parameters, and return value' do
+      subject.after_action { |action, params, result| print result + params }
+      expect { subject.run_action(->(p) { 'out' }, 'p') }.to output('outp').to_stdout
     end
   end
 
