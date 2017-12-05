@@ -48,8 +48,7 @@ module Ego
       errs sprintf(message, *replacements).light_red
     end
 
-    # Write stylized message to `$stderr` indicating a debugging message
-    # message.
+    # Write stylized message to `$stderr` indicating a debugging message.
     #
     # Plug-ins may use this method to provide extra information when the
     # `--verbose` flag is supplied at the command-line.
