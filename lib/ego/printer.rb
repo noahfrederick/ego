@@ -21,7 +21,7 @@ module Ego
 
     # Write stylized message to `$stdout` indicating an emote.
     #
-    # Plug-ins may use this method to indicating what the robot is doing.
+    # Plug-ins may use this method to indicate what the robot is doing.
     #
     # @example
     #   robot.emote 'runs away'
