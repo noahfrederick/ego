@@ -18,7 +18,7 @@ Ego.plugin builtin: true do |robot|
       alert %q(I don't understand "%s".), query
       alert ''
       alert 'If you would like to add this capability, start by running:'
-      alert '  %s %s > %s', $PROGRAM_NAME, query.shellescape, plugin_path
+      alert '  %s %s > %s', options.usage.program_name, query.shellescape, plugin_path
     end
 
     if verbose? || !$stdout.isatty
