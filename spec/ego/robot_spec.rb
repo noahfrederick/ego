@@ -191,7 +191,7 @@ RSpec.describe Ego::Robot do
     end
   end
 
-  describe '#handle' do
+  describe '#first_handler_for' do
     before do
       subject.on(
         ->(q) { :three if 'bar'.match(q) } => 3,
@@ -201,10 +201,28 @@ RSpec.describe Ego::Robot do
     end
 
     it 'chooses the highest-priority handler that matches the query' do
+      expect(subject.first_handler_for('foo').priority).to eq(2)
+    end
+
+    it 'returns nil when no handlers match' do
+      expect(subject.first_handler_for('xxx')).to be_nil
+    end
+  end
+
+  describe '#handle' do
+    before do
+      subject.on(
+        ->(q) { :three if 'bar'.match(q) } => 3,
+        ->(q) { :two if 'foo'.match(q) } => 2,
+        ->(q) { :one if 'foo'.match(q) } => 1,
+      ) { |params| params }
+    end
+
+    it 'returns the result of the action' do
       expect(subject.handle('foo')).to eq(:two)
     end
 
-    it 'returns false when no handlers match' do
+    it 'returns false when the query is unhandled' do
       expect(subject.handle('xxx')).to be false
     end
   end

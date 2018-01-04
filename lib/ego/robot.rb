@@ -135,8 +135,9 @@ module Ego
       result
     end
 
-    # Call `#handle` on each registered handler until a truthy value is
-    # returned, then run the associated action.
+    # Run the action for the highest-priority handler that can handle the given
+    # query and return the result. Associated hooks are run before and after
+    # running the action.
     #
     # @hook before_handle_query
     # @hook after_handle_query
@@ -150,16 +151,32 @@ module Ego
     def handle(query)
       run_hook :before_handle_query, query
 
-      @handlers.sort.reverse_each do |handler|
-        if params = handler.handle(query)
-          result = run_action(handler.action, params)
+      first_handler_for(query) do |handler, params|
+        return run_action(handler.action, params).tap do |result|
           run_hook :after_handle_query, query, handler
-          return result
         end
       end
 
       run_hook :on_unhandled_query, query
       false
+    end
+
+    # Find the highest-priority handler for a given query and return it. When a
+    # block is passed, the block is called if and only if a handler is found,
+    # passing the handler and parsed params as the block's arguments.
+    #
+    # @param query [String] user query
+    # @return [nil] if no handler can handle query
+    # @return [Handler] the first matching handler
+    def first_handler_for(query)
+      @handlers.sort.reverse_each do |handler|
+        if params = handler.handle(query)
+          yield(handler, params) if block_given?
+          return handler
+        end
+      end
+
+      nil
     end
   end
 end
