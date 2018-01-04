@@ -6,6 +6,8 @@ module Ego
   class Plugin
     # Manifest of all registered plug-ins
     @@plugins = {}
+    # Current plug-in context
+    @@context = nil
 
     attr_reader :name, :body, :builtin
 
@@ -46,13 +48,19 @@ module Ego
     # @return [Object] the decorated object
     def self.decorate(obj)
       @@plugins.each do |name, plugin|
-        if obj.respond_to?(:context)
-          obj.context = plugin
-        end
+        @@context = plugin
         plugin.body.call(obj)
+        @@context = nil
       end
 
       obj
+    end
+
+    # Get the currently executing plug-in.
+    #
+    # @return [Plugin] currently executing plugin
+    def self.context
+      @@context
     end
   end
 end

@@ -38,6 +38,7 @@ RSpec.describe Ego::Plugin do
 
     before do
       described_class.class_variable_set :@@plugins, {}
+      described_class.class_variable_set :@@context, nil
       described_class.register('a', proc { |obj|
         obj.a = 'foo'
       })
@@ -46,9 +47,18 @@ RSpec.describe Ego::Plugin do
       })
     end
 
-    it 'sets obj#context to each registered plugin' do
-      expect(obj).to receive(:context=).twice
+    it 'sets self.context to each registered plugin' do
+      described_class.register('c', proc { |obj|
+        obj.context = described_class.context
+      })
       described_class.decorate(obj)
+      expect(obj.context).to be_instance_of(described_class)
+    end
+
+    it 'sets resets self.context to nil' do
+      expect(described_class.context).to be_nil
+      described_class.decorate(obj)
+      expect(described_class.context).to be_nil
     end
 
     it 'calls each plugin body passing the obj' do

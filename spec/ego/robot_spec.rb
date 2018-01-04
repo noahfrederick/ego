@@ -77,34 +77,17 @@ RSpec.describe Ego::Robot do
   end
 
   describe '#can' do
-    context 'without a plug-in context set' do
-      it 'fails' do
-        expect { subject.can('fail') }.to raise_error(Ego::RobotError)
-      end
+    it 'adds a capability' do
+      expect(subject.capabilities).to be_empty
+      subject.can('do A')
+      expect(subject.capabilities.count).to eq(1)
+      subject.can('do B')
+      expect(subject.capabilities.count).to eq(2)
     end
 
-    context 'with a plug-in context set' do
-      let(:plugin_name) { 'my_plug' }
-      before do
-        allow(plugin).to receive(:name) { plugin_name }
-        subject.context = plugin
-      end
-
-      it 'adds a capability' do
-        expect(subject.capabilities).to be_empty
-        subject.can('succeed')
-        expect(subject.capabilities).not_to be_empty
-      end
-
-      it 'sets the capability description' do
-        subject.can('succeed')
-        expect(subject.capabilities.last.desc).to eq('succeed')
-      end
-
-      it 'records the plug-in with the capability' do
-        subject.can('succeed')
-        expect(subject.capabilities.last.plugin.name).to eq(plugin_name)
-      end
+    it 'sets the capability description' do
+      subject.can('succeed')
+      expect(subject.capabilities.last.desc).to eq('succeed')
     end
   end
 

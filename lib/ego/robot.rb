@@ -16,8 +16,6 @@ module Ego
     include Hooks::InstanceHooks
 
     attr_reader :name, :options, :capabilities
-    # Set/get currently executing plug-in
-    attr_accessor :context
 
     alias_method :provide, :define_singleton_method
 
@@ -31,7 +29,6 @@ module Ego
     def initialize(options)
       @name = options.robot_name
       @options = options
-      @context = nil
       @capabilities = []
       @handlers = []
     end
@@ -70,10 +67,7 @@ module Ego
     #
     # @see Capability
     def can(desc)
-      unless @context
-        raise RobotError, 'Cannot add capability outside of plug-in context'
-      end
-      @capabilities << Capability.new(desc, @context)
+      @capabilities << Capability.new(desc)
     end
 
     # Register a new query handler.

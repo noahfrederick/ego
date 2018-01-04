@@ -1,3 +1,5 @@
+require_relative 'plugin'
+
 module Ego
   # A capability defines functionality added to a `Robot` instance by a
   # plug-in.
@@ -16,10 +18,9 @@ module Ego
     attr_reader :desc, :plugin
 
     # @param desc [String] the capability description answering "What can the robot do?"
-    # @param plugin [Plugin] the plug-in that provides the capability
-    def initialize(desc, plugin)
+    def initialize(desc)
       @desc = desc
-      @plugin = plugin
+      @plugin = Plugin.context
     end
 
     # @return [String] the capability description
