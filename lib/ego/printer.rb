@@ -54,9 +54,9 @@ module Ego
     # `--verbose` flag is supplied at the command-line.
     #
     # @example
-    #   name = 'world'
-    #   robot.alert 'Hello, %s.', name
-    #   # => "Hello, world."
+    #   result = 'output'
+    #   robot.debug 'Result: %s.', result
+    #   # => "Result: output"
     #
     # @param message [Object] message to write
     # @param *replacements [Object, ...] `printf`-style replacements
