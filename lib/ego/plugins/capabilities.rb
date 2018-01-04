@@ -1,4 +1,4 @@
-Ego.plugin builtin: true do |robot|
+Ego.plugin do |robot|
   robot.can 'list capabilities'
 
   robot.on(

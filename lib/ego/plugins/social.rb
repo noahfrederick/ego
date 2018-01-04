@@ -1,4 +1,4 @@
-Ego.plugin builtin: true do |robot|
+Ego.plugin do |robot|
   robot.can 'socialize'
 
   robot.on(/^((who|what) are you|what('?s| is) your name)/i) do

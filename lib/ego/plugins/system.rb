@@ -1,4 +1,4 @@
-Ego.plugin builtin: true do |robot|
+Ego.plugin do |robot|
   robot.can 'execute system commands'
 
   robot.provide :system do |*args|

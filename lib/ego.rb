@@ -26,16 +26,14 @@ module Ego
   #   end
   #
   # @param name [String, nil] the plug-in name (uses plug-in file's basename if given `nil`)
-  # @param builtin [Boolean] whether to register as a built-in plug-in
   # @param body the plug-in body
   # @return [Plugin] the instantiated plug-in
   #
   # @see Robot
-  def self.plugin(name = nil, builtin: false, &body)
-    if name.nil?
-      path = caller_locations(1, 1)[0].absolute_path
-      name = File.basename(path, '.*')
-    end
+  def self.plugin(name = nil, &body)
+    path = caller_locations(1, 1)[0].absolute_path
+    name ||= File.basename(path, '.*')
+    builtin = path.start_with?(__dir__)
 
     Plugin.register(name, body, builtin: builtin)
   end

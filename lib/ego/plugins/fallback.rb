@@ -1,4 +1,4 @@
-Ego.plugin builtin: true do |robot|
+Ego.plugin do |robot|
   robot.can 'help you write extensions'
 
   robot.on_unhandled_query do |query|
