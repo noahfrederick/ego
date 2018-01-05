@@ -3,7 +3,7 @@ require_relative 'robot_error'
 module Ego
   # Handlers map user queries to actions.
   #
-  # @note Handlers should be registered by plug-ins using the `robot#on`
+  # @note Handlers should be registered by plug-ins using the `Robot#on`
   #   method.
   #
   # @example Add a handler to the robot instance

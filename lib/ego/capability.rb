@@ -5,7 +5,7 @@ module Ego
   # plug-in.
   #
   # @note New capabilities should be specified by plug-ins using the
-  #   `robot#can` method.
+  #   `Robot#can` method.
   #
   # @example Add a capability to the robot instance
   #   Ego.plugin do |robot|
