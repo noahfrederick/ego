@@ -20,12 +20,12 @@ module Ego
       @builtin = builtin
     end
 
-    # Require all given plug-in paths
+    # Load all given plug-in paths
     #
     # @param paths [Array] absolute paths to plug-in files
     # @return [void]
     def self.load(paths)
-      paths.each { |path| require path }
+      paths.each { |path| Kernel.load path }
     end
 
     # Register a new plug-in

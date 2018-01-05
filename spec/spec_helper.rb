@@ -21,3 +21,40 @@ RSpec.configure do |config|
   # be too noisy due to issues in dependencies.
   config.warnings = true
 end
+
+# Get a new robot instance with plugin.
+#
+# @param plugin [String] basename of plugin script
+# @return [Ego::Robot] the decorated robot instance
+def robot_with_plugin(plugin)
+  require 'ego'
+
+  options = double('Ego::Options')
+
+  allow(options).to receive_messages({
+    robot_name: 'TestBot',
+    verbose: false,
+  })
+
+  paths = Ego::Filesystem.builtin_plugins.select do |path|
+    path.end_with?("/#{plugin}.rb")
+  end
+
+  Ego::Plugin.class_variable_set :@@plugins, {}
+  Ego::Plugin.load paths
+  Ego::Plugin.decorate(Ego::Robot.new(options)).ready
+end
+
+RSpec::Matchers.define :handle_query do |query|
+  match do |robot|
+    !robot.first_handler_for(query).nil?
+  end
+end
+
+RSpec::Matchers.define :be_able_to do |desc|
+  match do |robot|
+    robot.capabilities.select do |capability|
+      capability.desc == desc
+    end.any?
+  end
+end

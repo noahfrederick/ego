@@ -14,4 +14,20 @@ Ego.plugin do |robot|
       printf("- %s %s\n", cap.to_s, plugin)
     end
   end
+
+  # Returns `true` if any registered handler can handle the given query.
+  #
+  # @param query [String] user query
+  # @return [Boolean] whether any handler matches the query
+  robot.provide :understand? do |query|
+    !first_handler_for(query).nil?
+  end
+
+  robot.on(/^(can|do|would) you understand\s+(?<query>.+)/i => 6) do |match|
+    if understand?(match[:query])
+      say 'Yes, I understand that.'
+    else
+      say 'No, I do not understand that.'
+    end
+  end
 end
