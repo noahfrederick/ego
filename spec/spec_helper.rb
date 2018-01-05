@@ -36,13 +36,17 @@ def robot_with_plugin(plugin)
     verbose: false,
   })
 
+  robot = Ego::Robot.new(options)
+  robot.extend(Ego::Printer) # Needed to test most robot output
+  String.disable_colorization = true
+
   paths = Ego::Filesystem.builtin_plugins.select do |path|
     path.end_with?("/#{plugin}.rb")
   end
 
   Ego::Plugin.class_variable_set :@@plugins, {}
   Ego::Plugin.load paths
-  Ego::Plugin.decorate(Ego::Robot.new(options)).ready
+  Ego::Plugin.decorate(robot).ready
 end
 
 RSpec::Matchers.define :handle_query do |query|

@@ -5,6 +5,9 @@ module Ego
     let(:verbose_printer) { (Class.new { include Printer; def verbose?; true; end }).new }
     let(:printer) { (Class.new { include Printer }).new }
 
+    before :all { String.disable_colorization = false }
+    after :all { String.disable_colorization = true }
+
     describe '#puts' do
       it 'is callable on the module' do
         expect(described_class.respond_to?(:puts)).to be true
