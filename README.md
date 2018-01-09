@@ -83,14 +83,14 @@ This is the part that gets run when the pattern matches the query. From here
 you can do anything you want including deferring to external programs. The
 `robot` provides various methods to you to respond to the user. Usually, you'll
 want to make use of part of the query inside the action. You can access named
-match groups through the optional `params` parameter:
+match groups as block arguments:
 
 ```ruby
 Ego.plugin do |robot|
   robot.can 'repeat what you say'
 
-  robot.on /^say (?<input>.+)/i do |params|
-    say params[:input]
+  robot.on /^say (?<input>.+)/i do |input|
+    say input
   end
 end
 ```

@@ -56,9 +56,13 @@ module Ego
     #
     # @param query [String] the query to match the condition against
     # @return [false] if condition doesn't match
-    # @return the return value of condition
+    # @return [Array] parameters to pass to the action
     def handle(query)
-      @condition.call(query) || false
+      return false unless result = @condition.call(query)
+
+      @action.parameters.each_with_object([]) do |param, arr|
+        arr << result[param.pop]
+      end
     end
 
     protected

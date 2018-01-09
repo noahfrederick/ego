@@ -20,8 +20,8 @@ module Ego
   #   Ego.plugin do |robot|
   #     robot.can 'repeat what you say'
   #
-  #     robot.on /^say (?<input>.+)/i do |params|
-  #       say params[:input]
+  #     robot.on /^say (?<input>.+)/i do |input|
+  #       say input
   #     end
   #   end
   #

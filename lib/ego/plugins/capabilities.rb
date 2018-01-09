@@ -23,8 +23,8 @@ Ego.plugin do |robot|
     !first_handler_for(query).nil?
   end
 
-  robot.on(/^(can|do|would) you understand\s+(?<query>.+)/i => 6) do |match|
-    if understand?(match[:query])
+  robot.on(/^(can|do|would) you understand\s+(?<query>.+)/i => 6) do |query|
+    if understand?(query)
       say 'Yes, I understand that.'
     else
       say 'No, I do not understand that.'

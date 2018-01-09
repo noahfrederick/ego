@@ -10,7 +10,7 @@ Ego.plugin do |robot|
   end
 
   robot.can 'repeat what you say'
-  robot.on(/^(?:say|echo)\s+(?<input>.+)/i) do |match|
-    say match[:input]
+  robot.on(/^(?:say|echo)\s+(?<input>.+)/i) do |input|
+    say input
   end
 end

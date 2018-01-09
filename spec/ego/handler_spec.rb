@@ -1,7 +1,7 @@
 require 'ego/handler'
 
 RSpec.describe Ego::Handler do
-  let(:condition) { ->(q) { 'bar' if q == 'foo' } }
+  let(:condition) { ->(q) { {p: 'bar', q: 'baz'} if q == 'foo' } }
   let(:regexp) { /^baz/i }
   let(:action) { ->(p) { puts p } }
   let(:priority) { 2 }
@@ -55,8 +55,26 @@ RSpec.describe Ego::Handler do
     end
 
     context 'when the query can be handled' do
-      it 'returns the result of the condition closure' do
-        expect(subject.handle('foo')).to eq('bar')
+      it 'returns an array of parameters' do
+        expect(subject.handle('foo')).to be_a Array
+      end
+
+      it 'returns parameters specified as action arguments' do
+        expect(subject.handle('foo')).to include('bar')
+      end
+
+      it 'does not return parameters not specified as action arguments' do
+        expect(subject.handle('foo')).not_to include('baz')
+      end
+
+      it 'respects the order of action arguments' do
+        subject = described_class.new(condition, ->(q, p) { }, priority)
+        expect(subject.handle('foo')).to eq(['baz', 'bar'])
+      end
+
+      it 'gracefully handles extra action arguments' do
+        subject = described_class.new(condition, ->(p, q, r) { }, priority)
+        expect { subject.handle('foo') }.not_to raise_error
       end
     end
   end

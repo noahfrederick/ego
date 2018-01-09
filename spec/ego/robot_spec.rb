@@ -141,11 +141,11 @@ RSpec.describe Ego::Robot do
 
   describe '#run_action' do
     it 'calls the action with supplied parameters' do
-      expect(subject.run_action(->(params) { params }, 'foo')).to eq('foo')
+      expect(subject.run_action(->(params) { params }, ['foo'])).to eq('foo')
     end
 
     it 'executes the action in the context of the robot instance' do
-      expect(subject.run_action(->(params) { name }, 'foo')).to eq(subject.name)
+      expect(subject.run_action(->() { name }, [])).to eq(subject.name)
     end
   end
 
@@ -194,10 +194,10 @@ RSpec.describe Ego::Robot do
   describe '#first_handler_for' do
     before do
       subject.on(
-        ->(q) { :three if 'bar'.match(q) } => 3,
-        ->(q) { :two if 'foo'.match(q) } => 2,
-        ->(q) { :one if 'foo'.match(q) } => 1,
-      ) { |params| params }
+        ->(q) { {} if 'bar'.match(q) } => 3,
+        ->(q) { {} if 'foo'.match(q) } => 2,
+        ->(q) { {} if 'foo'.match(q) } => 1,
+      ) { }
     end
 
     it 'chooses the highest-priority handler that matches the query' do
@@ -212,10 +212,10 @@ RSpec.describe Ego::Robot do
   describe '#handle' do
     before do
       subject.on(
-        ->(q) { :three if 'bar'.match(q) } => 3,
-        ->(q) { :two if 'foo'.match(q) } => 2,
-        ->(q) { :one if 'foo'.match(q) } => 1,
-      ) { |params| params }
+        ->(q) { {param: :three} if 'bar'.match(q) } => 3,
+        ->(q) { {param: :two} if 'foo'.match(q) } => 2,
+        ->(q) { {param: :one} if 'foo'.match(q) } => 1,
+      ) { |param| param }
     end
 
     it 'returns the result of the action' do
