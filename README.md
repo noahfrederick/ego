@@ -36,7 +36,7 @@ looks like that responds to a query beginning with "hello...", "hi...", or
 Ego.plugin do |robot|
   robot.can 'greet you'
 
-  robot.on /^(hello|hi|hey)/i, 3 do
+  robot.on /^(hello|hi|hey)/i do
     say [
       'Hello.',
       'Hi.',
@@ -59,15 +59,11 @@ This adds a new "capability", which serves as documentation for the user and
 answers the question "What can this plug-in do?"
 
 ```ruby
-robot.on /^(hello|hi|hey)/i, 3 ...
+robot.on /^(hello|hi|hey)/i ...
 ```
 
 This is the condition that determines what queries should invoke the following
-action. The first argument is a regular expression to match the query against.
-Sometimes you may want to match very specific things and sometimes something
-broader. To help ego respond the right way when two or more patterns match
-your query, you can optionally specify a priority (higher number = higher
-priority) as the second argument.
+action. A regular expression is specified to match the query against.
 
 ```ruby
 ... do
