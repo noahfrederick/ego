@@ -21,5 +21,5 @@ RSpec.configure do |config|
 
   # This setting enables warnings. It's recommended, but in some cases may
   # be too noisy due to issues in dependencies.
-  config.warnings = true
+  config.warnings = false
 end
