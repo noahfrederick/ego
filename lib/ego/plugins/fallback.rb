@@ -1,36 +1,20 @@
 Ego.plugin do |robot|
-  robot.can 'help you write extensions'
+  robot.can 'help you write plug-ins'
 
   robot.on_unhandled_query do |query|
-    plugin_slug = query
-      .gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
-      .gsub(/([a-z\d])([A-Z])/, '\1_\2')
-      .tr('\'', '')
-      .gsub(/\W+/, '_')
-      .gsub(/__+/, '_')
-      .downcase
+    require 'ego/plugin_helper'
 
-    plugin_path = Ego::Filesystem.config("plugins/#{plugin_slug}.rb")
-    plugin_path.sub!(/^#{ENV['HOME']}/, '~')
+    helper = Ego::PluginHelper.new(
+      query: query,
+      program_name: options.usage.program_name
+    )
 
     if $stdout.isatty
-      require 'shellwords'
-      alert %q(I don't understand "%s".), query
-      alert ''
-      alert 'If you would like to add this capability, start by running:'
-      alert '  %s %s > %s', options.usage.program_name, query.shellescape, plugin_path
+      alert helper.hint
     end
 
     if verbose? || !$stdout.isatty
-      puts <<~EOF
-        Ego.plugin do |robot|
-          robot.can 'do something new'
-
-          robot.on(/^#{query}$/i) do |params|
-            alert 'Not implemented yet. Go ahead and edit #{plugin_path}.'
-          end
-        end
-      EOF
+      puts helper.template
     end
   end
 end

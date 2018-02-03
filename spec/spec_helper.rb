@@ -30,10 +30,16 @@ def robot_with_plugin(plugin)
   require 'ego'
 
   options = double('Ego::Options')
+  opt_parser = double('OptionParser')
+
+  allow(opt_parser).to receive_messages({
+    program_name: 'ego',
+  })
 
   allow(options).to receive_messages({
     robot_name: 'TestBot',
     verbose: false,
+    usage: opt_parser,
   })
 
   robot = Ego::Robot.new(options)
