@@ -1,3 +1,5 @@
+Dir[File.expand_path('support/**/*.rb', __dir__)].each { |f| require_relative f }
+
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     # This option will default to `true` in RSpec 4. It makes the `description`
@@ -20,51 +22,4 @@ RSpec.configure do |config|
   # This setting enables warnings. It's recommended, but in some cases may
   # be too noisy due to issues in dependencies.
   config.warnings = true
-end
-
-# Get a new robot instance with plugin.
-#
-# @param plugin [String] basename of plugin script
-# @return [Ego::Robot] the decorated robot instance
-def robot_with_plugin(plugin)
-  require 'ego'
-
-  options = double('Ego::Options')
-  opt_parser = double('OptionParser')
-
-  allow(opt_parser).to receive_messages({
-    program_name: 'ego',
-  })
-
-  allow(options).to receive_messages({
-    robot_name: 'TestBot',
-    verbose: false,
-    usage: opt_parser,
-  })
-
-  robot = Ego::Robot.new(options)
-  robot.extend(Ego::Printer) # Needed to test most robot output
-  String.disable_colorization = true
-
-  paths = Ego::Filesystem.builtin_plugins.select do |path|
-    path.end_with?("/#{plugin}.rb")
-  end
-
-  Ego::Plugin.class_variable_set :@@plugins, {}
-  Ego::Plugin.load paths
-  Ego::Plugin.decorate(robot).ready
-end
-
-RSpec::Matchers.define :handle_query do |query|
-  match do |robot|
-    !robot.first_handler_for(query).nil?
-  end
-end
-
-RSpec::Matchers.define :be_able_to do |desc|
-  match do |robot|
-    robot.capabilities.select do |capability|
-      capability.desc == desc
-    end.any?
-  end
 end

@@ -1,8 +1,6 @@
 require 'ego/robot'
 
-RSpec.describe Ego::Robot, 'with system plug-in' do
-  subject { robot_with_plugin('system') }
-
+RSpec.describe Ego::Robot, 'with system plug-in', plugin: 'system' do
   it { should be_able_to 'execute system commands' }
 
   describe '#system' do

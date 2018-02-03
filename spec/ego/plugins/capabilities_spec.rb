@@ -1,8 +1,6 @@
 require 'ego/robot'
 
-RSpec.describe Ego::Robot, 'with capabilities plug-in' do
-  subject { robot_with_plugin('capabilities') }
-
+RSpec.describe Ego::Robot, 'with capabilities plug-in', plugin: 'capabilities' do
   describe '#understand?' do
     it 'is defined on the robot instance' do
       expect(subject.respond_to?(:understand?)).to be true

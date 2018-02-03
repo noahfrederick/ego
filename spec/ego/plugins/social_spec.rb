@@ -1,8 +1,6 @@
 require 'ego/robot'
 
-RSpec.describe Ego::Robot, 'with social plug-in' do
-  subject { robot_with_plugin('social') }
-
+RSpec.describe Ego::Robot, 'with social plug-in', plugin: 'social' do
   it { should be_able_to 'socialize' }
 
   it { should handle_query 'who are you' }

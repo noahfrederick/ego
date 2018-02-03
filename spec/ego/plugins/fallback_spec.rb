@@ -1,7 +1,6 @@
 require 'ego/robot'
 
-RSpec.describe Ego::Robot, 'with fallback plug-in' do
-  subject { robot_with_plugin('fallback') }
+RSpec.describe Ego::Robot, 'with fallback plug-in', plugin: 'fallback' do
   let(:unhandlable_query) { 'xxx' }
 
   it { should be_able_to 'help you write plug-ins' }

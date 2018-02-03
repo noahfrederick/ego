@@ -1,8 +1,6 @@
 require 'ego/robot'
 
-RSpec.describe Ego::Robot, 'with robot_io plug-in' do
-  subject { robot_with_plugin('robot_io') }
-
+RSpec.describe Ego::Robot, 'with robot_io plug-in', plugin: 'robot_io' do
   it { should be_able_to 'output text to the terminal' }
 
   describe '#verbose?' do

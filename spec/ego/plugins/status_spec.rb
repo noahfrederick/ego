@@ -1,8 +1,6 @@
 require 'ego/robot'
 
-RSpec.describe Ego::Robot, 'with status plug-in' do
-  subject { robot_with_plugin('status') }
-
+RSpec.describe Ego::Robot, 'with status plug-in', plugin: 'status' do
   it { should be_able_to 'report robot status' }
 
   it { should handle_query 'status' }
