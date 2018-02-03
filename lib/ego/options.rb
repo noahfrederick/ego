@@ -41,6 +41,10 @@ module Ego
           @mode = :shell
         end
 
+        opts.on("-t", "--template", "Create a new plug-in") do
+          @mode = :template
+        end
+
         opts.on("-v", "--version", "Print version number") do
           @mode = :version
         end

@@ -11,6 +11,11 @@ RSpec.describe Ego::Options do
     expect(opts.mode).to eq(:shell)
   end
 
+  it 'can be set to template-mode' do
+    opts = described_class.new(['-t'])
+    expect(opts.mode).to eq(:template)
+  end
+
   it 'can be set to version-mode' do
     opts = described_class.new(['-v'])
     expect(opts.mode).to eq(:version)

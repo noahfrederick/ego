@@ -1,4 +1,4 @@
-require 'ego/filesystem'
+require_relative 'filesystem'
 
 module Ego
   # The PluginHelper assists the user in writing extensions by generating
@@ -8,9 +8,9 @@ module Ego
   class PluginHelper
     # @param query [String] example user query
     # @param program_name [String] the executable name
-    def initialize(query:, program_name:)
-      @query = query
-      @program_name = program_name
+    def initialize(query: nil, program_name: nil)
+      @query = query || 'My new plugin'
+      @program_name = program_name || 'ego'
     end
 
     # Derive a slug from the user query.

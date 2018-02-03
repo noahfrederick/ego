@@ -21,6 +21,16 @@ RSpec.describe Ego::Runner do
     end
   end
 
+  context 'with --template' do
+    subject { described_class.new(['--template']) }
+
+    it 'prints plug-in template' do
+      expect { subject.run }.to output(
+        /^Ego.plugin /
+      ).to_stdout
+    end
+  end
+
   context 'with --version' do
     subject { described_class.new(['--version']) }
 

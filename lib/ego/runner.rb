@@ -1,5 +1,6 @@
 require_relative '../ego'
 require_relative 'options'
+require_relative 'plugin_helper'
 
 module Ego
   # The Runner class, given an array of arguments, initializes the required
@@ -36,6 +37,12 @@ module Ego
         exit(-1) if @options.usage_error
       when :version
         Printer.puts "ego v#{Ego::VERSION}"
+      when :template
+        helper = PluginHelper.new({
+          query: (@options.query unless @options.query.empty?),
+          program_name: @options.usage.program_name
+        })
+        Printer.puts helper.template
       when :shell
         start_shell(robot_factory)
       else
