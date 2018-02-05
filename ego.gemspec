@@ -29,7 +29,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec", "~> 3.7"
   spec.add_development_dependency "aruba", "~> 0.14"
+  spec.add_development_dependency "rubocop", "~> 0.52.1"
   spec.add_development_dependency "guard-rspec"
+  spec.add_development_dependency "guard-rubocop"
 
   spec.add_runtime_dependency "colorize", "~> 0.7"
   spec.add_runtime_dependency "hooks", "~> 0.4"
