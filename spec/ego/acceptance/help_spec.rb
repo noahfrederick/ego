@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe 'bin/ego --help', type: :aruba do
-  before(:each) { run_simple('bin/ego --help') }
+  before(:each) { run_command('bin/ego --help') }
 
   it 'prints usage help' do
-    expect(last_command_started.stdout).to start_with 'Usage: ego'
+    expect(last_command_started).to have_output an_output_string_matching('^Usage: ego')
   end
 end

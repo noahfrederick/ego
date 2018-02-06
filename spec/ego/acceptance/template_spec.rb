@@ -2,11 +2,11 @@
 
 RSpec.describe 'bin/ego --template', type: :aruba do
   context 'without a query' do
-    before(:each) { run_simple('bin/ego --template') }
+    before(:each) { run_command('bin/ego --template') }
 
     it 'prints the plug-in template with default query' do
       # rubocop:disable Layout/EmptyLinesAroundArguments
-      expect(last_command_started.stdout).to eq(
+      expect(last_command_started).to have_output an_output_string_being_eq(
         <<~TEMPLATE
           Ego.plugin do |robot|
             robot.can 'do something new'
@@ -22,11 +22,11 @@ RSpec.describe 'bin/ego --template', type: :aruba do
   end
 
   context 'with a query' do
-    before(:each) { run_simple('bin/ego --template help me out') }
+    before(:each) { run_command('bin/ego --template help me out') }
 
     it 'prints the plug-in template with supplied query' do
       # rubocop:disable Layout/EmptyLinesAroundArguments
-      expect(last_command_started.stdout).to eq(
+      expect(last_command_started).to have_output an_output_string_being_eq(
         <<~TEMPLATE
           Ego.plugin do |robot|
             robot.can 'do something new'
