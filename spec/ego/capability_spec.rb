@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ego/capability'
 
 RSpec.describe Ego::Capability do

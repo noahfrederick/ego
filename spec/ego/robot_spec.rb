@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ego/robot'
 
 RSpec.describe Ego::Robot do
@@ -5,10 +7,10 @@ RSpec.describe Ego::Robot do
   let(:options) { double('Ego::Options') }
   let(:plugin) { double('Ego::Plugin') }
   subject do
-    allow(options).to receive_messages({
+    allow(options).to receive_messages(
       robot_name: name,
-      verbose: false,
-    })
+      verbose: false
+    )
 
     described_class.new(options)
   end
@@ -97,7 +99,7 @@ RSpec.describe Ego::Robot do
       let(:priority) { 9 }
 
       before do
-        subject.on(condition, priority) { }
+        subject.on(condition, priority) {}
       end
 
       it 'passes the condition and action to a new handler' do
@@ -114,9 +116,9 @@ RSpec.describe Ego::Robot do
     context 'given a hash' do
       before do
         subject.on(
-          ->(q) { 'foo' } => 1,
-          ->(q) { 'bar' } => 2,
-        ) { }
+          ->(_q) { 'foo' } => 1,
+          ->(_q) { 'bar' } => 2
+        ) {}
       end
 
       it 'creates a new handler for each item' do
@@ -145,7 +147,7 @@ RSpec.describe Ego::Robot do
     end
 
     it 'executes the action in the context of the robot instance' do
-      expect(subject.run_action(->() { name }, [])).to eq(subject.name)
+      expect(subject.run_action(-> { name }, [])).to eq(subject.name)
     end
   end
 
@@ -161,12 +163,12 @@ RSpec.describe Ego::Robot do
 
     it 'is run by #run_action' do
       subject.before_action { print 'Before!' }
-      expect { subject.run_action(->(p) { true }, 'p') }.to output('Before!').to_stdout
+      expect { subject.run_action(->(_p) { true }, 'p') }.to output('Before!').to_stdout
     end
 
     it 'receives the action and action parameters' do
-      subject.before_action { |action, params| print params }
-      expect { subject.run_action(->(p) { true }, 'p') }.to output('p').to_stdout
+      subject.before_action { |_action, params| print params }
+      expect { subject.run_action(->(_p) { true }, 'p') }.to output('p').to_stdout
     end
   end
 
@@ -182,22 +184,22 @@ RSpec.describe Ego::Robot do
 
     it 'is run by #run_action' do
       subject.after_action { print 'After!' }
-      expect { subject.run_action(->(p) { 'out' }, 'p') }.to output('After!').to_stdout
+      expect { subject.run_action(->(_p) { 'out' }, 'p') }.to output('After!').to_stdout
     end
 
     it 'receives the action, parameters, and return value' do
-      subject.after_action { |action, params, result| print result + params }
-      expect { subject.run_action(->(p) { 'out' }, 'p') }.to output('outp').to_stdout
+      subject.after_action { |_action, params, result| print result + params }
+      expect { subject.run_action(->(_p) { 'out' }, 'p') }.to output('outp').to_stdout
     end
   end
 
   describe '#first_handler_for' do
     before do
       subject.on(
-        ->(q) { {} if 'bar'.match(q) } => 3,
-        ->(q) { {} if 'foo'.match(q) } => 2,
-        ->(q) { {} if 'foo'.match(q) } => 1,
-      ) { }
+        ->(q) { {} if /bar/ =~ q } => 3,
+        ->(q) { {} if /foo/ =~ q } => 2,
+        ->(q) { {} if /foo/ =~ q } => 1
+      ) {}
     end
 
     it 'chooses the highest-priority handler that matches the query' do
@@ -212,9 +214,9 @@ RSpec.describe Ego::Robot do
   describe '#handle' do
     before do
       subject.on(
-        ->(q) { {param: :three} if 'bar'.match(q) } => 3,
-        ->(q) { {param: :two} if 'foo'.match(q) } => 2,
-        ->(q) { {param: :one} if 'foo'.match(q) } => 1,
+        ->(q) { { param: :three } if /bar/ =~ q } => 3,
+        ->(q) { { param: :two } if /foo/ =~ q } => 2,
+        ->(q) { { param: :one } if /foo/ =~ q } => 1
       ) { |param| param }
     end
 
@@ -289,7 +291,7 @@ RSpec.describe Ego::Robot do
     end
 
     it 'is not run by #handle when the query is handled' do
-      subject.on('xxx') { }
+      subject.on('xxx') {}
       expect { subject.handle('xxx') }.not_to output('Oops!').to_stdout
     end
 

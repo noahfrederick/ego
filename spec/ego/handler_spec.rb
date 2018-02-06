@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'ego/handler'
 
 RSpec.describe Ego::Handler do
-  let(:condition) { ->(q) { {p: 'bar', q: 'baz'} if q == 'foo' } }
+  let(:condition) { ->(q) { { p: 'bar', q: 'baz' } if q == 'foo' } }
   let(:regexp) { /^baz/i }
   let(:action) { ->(p) { puts p } }
   let(:priority) { 2 }
@@ -68,12 +70,12 @@ RSpec.describe Ego::Handler do
       end
 
       it 'respects the order of action arguments' do
-        subject = described_class.new(condition, ->(q, p) { }, priority)
-        expect(subject.handle('foo')).to eq(['baz', 'bar'])
+        subject = described_class.new(condition, ->(q, p) {}, priority)
+        expect(subject.handle('foo')).to eq(%w[baz bar])
       end
 
       it 'gracefully handles extra action arguments' do
-        subject = described_class.new(condition, ->(p, q, r) { }, priority)
+        subject = described_class.new(condition, ->(p, q, r) {}, priority)
         expect { subject.handle('foo') }.not_to raise_error
       end
     end

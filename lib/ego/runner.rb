@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../ego'
 require_relative 'options'
 require_relative 'plugin_helper'
@@ -9,7 +11,7 @@ module Ego
     # Prompt to display in shell-mode
     PROMPT = 'ego, '.green.freeze
     # Pattern that triggers shell-mode to exit
-    QUIT = /^q(uit)?|exit|(good)?bye$/.freeze
+    QUIT = /^q(uit)?|exit|(good)?bye$/
 
     # Takes an array of arguments and parses them into options:
     #
@@ -28,9 +30,7 @@ module Ego
     def run
       case @options.mode
       when :help
-        if @options.usage_error
-          Printer.errs @options.usage_error, "\n"
-        end
+        Printer.errs @options.usage_error, "\n" if @options.usage_error
 
         Printer.puts @options.usage
 
@@ -38,10 +38,10 @@ module Ego
       when :version
         Printer.puts "ego v#{Ego::VERSION}"
       when :template
-        helper = PluginHelper.new({
+        helper = PluginHelper.new(
           query: (@options.query unless @options.query.empty?),
           program_name: @options.usage.program_name
-        })
+        )
         Printer.puts helper.template
       when :shell
         start_shell(robot_factory)
@@ -61,9 +61,7 @@ module Ego
     def robot_factory
       Plugin.load Filesystem.builtin_plugins
 
-      if @options.plugins
-        Plugin.load Filesystem.user_plugins
-      end
+      Plugin.load Filesystem.user_plugins if @options.plugins
 
       Plugin.decorate(Robot.new(@options)).ready
     end

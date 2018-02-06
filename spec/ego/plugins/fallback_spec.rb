@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ego/robot'
 
 RSpec.describe Ego::Robot, 'with fallback plug-in', plugin: 'fallback' do

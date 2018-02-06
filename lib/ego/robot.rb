@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'capability'
 require_relative 'handler'
 require_relative 'robot_error'
@@ -17,7 +19,7 @@ module Ego
 
     attr_reader :name, :options, :capabilities
 
-    alias_method :provide, :define_singleton_method
+    alias provide define_singleton_method
 
     define_hooks :on_ready, :on_shutdown
     define_hooks :before_handle_query, :after_handle_query, :on_unhandled_query
@@ -75,6 +77,7 @@ module Ego
     # The robot will execute the given block (the "action") when the given
     # pattern (the "condition") matches. Conditions are assigned priorities,
     # which determined in what order conditions are checked against the query.
+    # A higher number is treated as higher priority.
     #
     # @example Add a handler to the robot instance
     #   robot.on(/^pattern/) do
@@ -100,14 +103,14 @@ module Ego
     #     # ...
     #   end
     #
-    # @param condition [Proc, #match] the condition that triggers the supplied action
-    # @param priority [Integer] the handler priority (higher number = higher priority)
+    # @param condition [Proc, #match] the condition that triggers the action
+    # @param priority [Integer] the handler priority
     # @param action [Proc] the block to be executed when condition is met
     # @return [void]
     #
     # @see Handler#initialize
     def on(condition, priority = 5, &action)
-      unless action
+      unless action # rubocop:disable Style/IfUnlessModifier
         raise RobotError, "Hook requires an action: robot.on #{condition.inspect}"
       end
 
@@ -152,7 +155,7 @@ module Ego
       run_hook :before_handle_query, query
 
       first_handler_for(query) do |handler, params|
-        return run_action(handler.action, params).tap do |result|
+        return run_action(handler.action, params).tap do |_result|
           run_hook :after_handle_query, query, handler
         end
       end
@@ -170,7 +173,7 @@ module Ego
     # @return [Handler] the first matching handler
     def first_handler_for(query)
       @handlers.sort.reverse_each do |handler|
-        if params = handler.handle(query)
+        if (params = handler.handle(query))
           yield(handler, params) if block_given?
           return handler
         end

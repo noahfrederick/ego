@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ego/robot'
 
 RSpec.describe Ego::Robot, 'with status plug-in', plugin: 'status' do

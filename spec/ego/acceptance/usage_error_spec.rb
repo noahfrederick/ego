@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'bin/ego --invalid-flag', type: :aruba do
   before(:each) { run_simple('bin/ego --invalid-flag', fail_on_error: false) }
 

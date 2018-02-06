@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ego/plugin_helper'
 
 RSpec.describe Ego::PluginHelper do
@@ -13,11 +15,11 @@ RSpec.describe Ego::PluginHelper do
 
   describe '#path' do
     it 'returns a path to the plugins directory' do
-      expect(subject.path).to match(/\/plugins\//)
+      expect(subject.path).to match(%r{/plugins/})
     end
 
     it 'uses a tilde for the home directory' do
-      expect(subject.path).to match(/^~\//)
+      expect(subject.path).to match(%r{^~/})
     end
 
     it 'names the file after the slug' do

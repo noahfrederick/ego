@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'ego/robot'
 
 RSpec.describe Ego::Robot, 'with system plug-in', plugin: 'system' do
   it { should be_able_to 'execute system commands' }
 
   describe '#system' do
-    let(:args) { ['foo', 'bar'] }
+    let(:args) { %w[foo bar] }
 
     before do
       allow(Kernel).to receive(:system).and_return(true)
@@ -18,7 +20,7 @@ RSpec.describe Ego::Robot, 'with system plug-in', plugin: 'system' do
 
     it 'calls Kernel.system' do
       expect(Kernel).to receive(:system).with(*args)
-      subject.system *args
+      subject.system(*args)
     end
 
     it 'prints a debug message' do
@@ -26,12 +28,12 @@ RSpec.describe Ego::Robot, 'with system plug-in', plugin: 'system' do
         'Running system with arguments %s.',
         args
       )
-      subject.system *args
+      subject.system(*args)
     end
 
     it 'prints nothing on success' do
       expect(subject).not_to receive(:alert)
-      subject.system *args
+      subject.system(*args)
     end
 
     it 'prints an alert on error' do
@@ -40,7 +42,7 @@ RSpec.describe Ego::Robot, 'with system plug-in', plugin: 'system' do
         'Sorry, there was a problem running %s.',
         args.first
       )
-      subject.system *args
+      subject.system(*args)
     end
   end
 

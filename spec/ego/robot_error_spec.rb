@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ego/robot_error'
 
 RSpec.describe Ego::RobotError do

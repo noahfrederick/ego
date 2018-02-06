@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ego/robot'
 
 RSpec.describe Ego::Robot, 'with capabilities plug-in', plugin: 'capabilities' do
@@ -11,7 +13,7 @@ RSpec.describe Ego::Robot, 'with capabilities plug-in', plugin: 'capabilities' d
     end
 
     it 'returns true for queries the robot can handle' do
-      subject.on(/^zzz$/) { }
+      subject.on(/^zzz$/) {}
       expect(subject.understand?('zzz')).to be true
     end
   end

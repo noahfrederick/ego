@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'ego/filesystem'
 require_relative 'ego/robot'
 require_relative 'ego/plugin'
@@ -12,7 +14,7 @@ module Ego
   # automatically at runtime. Each plug-in goes in it's own file with an `.rb`
   # extension (e.g., `~/.config/ego/plugins/my_plugin.rb`).
   #
-  # Be careful—ego will execute any Ruby scripts in this directory
+  # Be careful---ego will execute any Ruby scripts in this directory
   # indiscriminately.
   #
   # @example Create and register a new plug-in

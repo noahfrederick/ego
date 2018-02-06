@@ -1,18 +1,20 @@
+# frozen_string_literal: true
+
 # Provide robot with plug-in loaded as test subject.
 RSpec.shared_context 'robot with plug-in' do
   subject do |example|
     options = double('Ego::Options')
     opt_parser = double('OptionParser')
 
-    allow(opt_parser).to receive_messages({
-      program_name: 'ego',
-    })
+    allow(opt_parser).to receive_messages(
+      program_name: 'ego'
+    )
 
-    allow(options).to receive_messages({
+    allow(options).to receive_messages(
       robot_name: 'TestBot',
       verbose: false,
-      usage: opt_parser,
-    })
+      usage: opt_parser
+    )
 
     robot = described_class.new(options)
 

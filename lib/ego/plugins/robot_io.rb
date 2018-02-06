@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Ego.plugin do |robot|
   robot.can 'output text to the terminal'
 

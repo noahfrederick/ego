@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Ego.plugin do |robot|
   robot.can 'socialize'
 
@@ -13,7 +15,7 @@ Ego.plugin do |robot|
       'Hi.',
       'Hey.',
       'Ciao.',
-      'Hej.',
+      'Hej.'
     ].sample
   end
 end

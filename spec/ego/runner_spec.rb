@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ego/runner'
 
 RSpec.describe Ego::Runner do

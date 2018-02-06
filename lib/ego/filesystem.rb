@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Ego
   # Provides utility methods for getting configuration, data, and cache paths.
   module Filesystem

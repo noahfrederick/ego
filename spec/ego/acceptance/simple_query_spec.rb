@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'bin/ego hello', type: :aruba do
   before(:each) { run_simple('bin/ego hello') }
 

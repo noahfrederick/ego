@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Ego.plugin do |robot|
   robot.can 'help you write plug-ins'
 
@@ -9,12 +11,8 @@ Ego.plugin do |robot|
       program_name: options.usage.program_name
     )
 
-    if $stdout.isatty
-      alert helper.hint
-    end
+    alert helper.hint if $stdout.isatty
 
-    if verbose? || !$stdout.isatty
-      puts helper.template
-    end
+    puts helper.template if verbose? || !$stdout.isatty
   end
 end

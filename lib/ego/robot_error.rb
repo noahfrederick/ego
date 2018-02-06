@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Ego
   # Error type raised by robot plug-in DSL.
   #

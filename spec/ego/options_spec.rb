@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ego/options'
 
 RSpec.describe Ego::Options do
@@ -52,7 +54,7 @@ RSpec.describe Ego::Options do
   end
 
   it 'sets the query to remaining args join with spaces' do
-    opts = described_class.new(['foo', 'bar'])
+    opts = described_class.new(%w[foo bar])
     expect(opts.query).to eq('foo bar')
   end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Ego
   # A plug-in extends Ego with new handlers and other functionality, through a
   # domain-specific language (DSL).
@@ -47,7 +49,7 @@ module Ego
     # @param obj [Object] the object to decorate
     # @return [Object] the decorated object
     def self.decorate(obj)
-      @@plugins.each do |name, plugin|
+      @@plugins.each_value do |plugin|
         @@context = plugin
         plugin.body.call(obj)
         @@context = nil

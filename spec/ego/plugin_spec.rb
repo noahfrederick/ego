@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ego/plugin'
 
 RSpec.describe Ego::Plugin do
@@ -30,7 +32,6 @@ RSpec.describe Ego::Plugin do
     end
   end
 
-
   describe '.decorate' do
     let(:obj) do
       Class.new { attr_accessor :context, :a, :b }.new
@@ -62,10 +63,10 @@ RSpec.describe Ego::Plugin do
     end
 
     it 'calls each plugin body passing the obj' do
-      expect(obj).to receive_messages({
+      expect(obj).to receive_messages(
         :a= => 'foo',
-        :b= => 'bar',
-      })
+        :b= => 'bar'
+      )
       described_class.decorate(obj)
     end
 

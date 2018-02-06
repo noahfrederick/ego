@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'filesystem'
 
 module Ego
@@ -18,13 +20,13 @@ module Ego
     # @return [String] slug
     def slug
       @slug ||= @query
-        .gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
-        .gsub(/([a-z\d])([A-Z])/, '\1_\2')
-        .tr('\'', '')
-        .gsub(/\W+/, '_')
-        .gsub(/__+/, '_')
-        .sub(/_$/, '')
-        .downcase
+                .gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
+                .gsub(/([a-z\d])([A-Z])/, '\1_\2')
+                .tr('\'', '')
+                .gsub(/\W+/, '_')
+                .gsub(/__+/, '_')
+                .sub(/_$/, '')
+                .downcase
     end
 
     # Derive a plug-in path from the user query.
@@ -32,7 +34,7 @@ module Ego
     # @return [String] plug-in path
     def path
       @path ||= Filesystem.config("plugins/#{slug}.rb")
-        .sub(/^#{ENV['HOME']}/, '~')
+                          .sub(/^#{ENV['HOME']}/, '~')
     end
 
     # Provide a hint for initializing a new plug-in.
@@ -40,19 +42,19 @@ module Ego
     # @return [String] hint text
     def hint
       require 'shellwords'
-      @hint ||= <<~EOF
+      @hint ||= <<~HINT
         I don't understand "#{@query}".
 
         If you would like to add this capability, start by running:
           #{@program_name} #{@query.shellescape} > #{path}
-      EOF
+      HINT
     end
 
     # Provide a template for initializing a new plug-in.
     #
     # @return [String] template contents
     def template
-      @template ||= <<~EOF
+      @template ||= <<~TEMPLATE
         Ego.plugin do |robot|
           robot.can 'do something new'
 
@@ -60,7 +62,7 @@ module Ego
             alert 'Not implemented yet. Go ahead and edit #{path}.'
           end
         end
-      EOF
+      TEMPLATE
     end
   end
 end

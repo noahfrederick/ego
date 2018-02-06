@@ -1,10 +1,13 @@
+# frozen_string_literal: true
+
 RSpec.describe 'bin/ego --template', type: :aruba do
   context 'without a query' do
     before(:each) { run_simple('bin/ego --template') }
 
     it 'prints the plug-in template with default query' do
+      # rubocop:disable Layout/EmptyLinesAroundArguments
       expect(last_command_started.stdout).to eq(
-        <<~EOF
+        <<~TEMPLATE
           Ego.plugin do |robot|
             robot.can 'do something new'
 
@@ -12,8 +15,9 @@ RSpec.describe 'bin/ego --template', type: :aruba do
               alert 'Not implemented yet. Go ahead and edit ~/.config/ego/plugins/my_new_plugin.rb.'
             end
           end
-        EOF
+        TEMPLATE
       )
+      # rubocop:enable Layout/EmptyLinesAroundArguments
     end
   end
 
@@ -21,8 +25,9 @@ RSpec.describe 'bin/ego --template', type: :aruba do
     before(:each) { run_simple('bin/ego --template help me out') }
 
     it 'prints the plug-in template with supplied query' do
+      # rubocop:disable Layout/EmptyLinesAroundArguments
       expect(last_command_started.stdout).to eq(
-        <<~EOF
+        <<~TEMPLATE
           Ego.plugin do |robot|
             robot.can 'do something new'
 
@@ -30,8 +35,9 @@ RSpec.describe 'bin/ego --template', type: :aruba do
               alert 'Not implemented yet. Go ahead and edit ~/.config/ego/plugins/help_me_out.rb.'
             end
           end
-        EOF
+        TEMPLATE
       )
+      # rubocop:enable Layout/EmptyLinesAroundArguments
     end
   end
 end

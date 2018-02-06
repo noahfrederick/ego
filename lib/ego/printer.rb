@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'colorize'
 
 module Ego
@@ -16,7 +18,7 @@ module Ego
     # @param *replacements [Object, ...] `printf`-style replacements
     # @return [nil]
     def say(message, *replacements)
-      puts sprintf(message, *replacements).bold
+      puts format(message, *replacements).bold
     end
 
     # Write stylized message to `$stdout` indicating an emote.
@@ -45,7 +47,7 @@ module Ego
     # @param *replacements [Object, ...] `printf`-style replacements
     # @return [nil]
     def alert(message, *replacements)
-      errs sprintf(message, *replacements).light_red
+      errs format(message, *replacements).light_red
     end
 
     # Write stylized message to `$stderr` indicating a debugging message.
@@ -62,14 +64,16 @@ module Ego
     # @param *replacements [Object, ...] `printf`-style replacements
     # @return [nil]
     def debug(message, *replacements)
-      errs sprintf(message, *replacements) if verbose?
+      errs format(message, *replacements) if verbose?
     end
 
     # Whether to print debugging messages. Can be overridden by classes that
     # include `Printer`.
     #
     # @return [false] should print debugging messages?
-    def verbose?; false; end
+    def verbose?
+      false
+    end
 
     module_function
 
@@ -88,7 +92,7 @@ module Ego
     # @param *message [Object, ...] message(s) to write
     # @return [nil]
     def errs(*message)
-      $stderr.puts(*message)
+      warn(*message)
     end
   end
 end

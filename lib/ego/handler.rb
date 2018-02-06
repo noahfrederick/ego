@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'robot_error'
 
 module Ego
@@ -58,7 +60,7 @@ module Ego
     # @return [false] if condition doesn't match
     # @return [Array] parameters to pass to the action
     def handle(query)
-      return false unless result = @condition.call(query)
+      return false unless (result = @condition.call(query))
 
       @action.parameters.each_with_object([]) do |param, arr|
         arr << result[param.pop]
