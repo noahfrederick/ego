@@ -4,7 +4,7 @@ Ego.plugin do |robot|
   robot.can 'help you write plug-ins'
 
   robot.on_unhandled_query do |query|
-    require 'ego/plugin_helper'
+    require_relative '../plugin_helper'
 
     helper = Ego::PluginHelper.new(
       query: query,
