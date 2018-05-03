@@ -15,4 +15,8 @@ Ego.plugin do |robot|
 
     puts helper.template if verbose? || !$stdout.isatty
   end
+
+  robot.on(/^$/) do
+    say %w[Yes? Hello? ...?].sample
+  end
 end
