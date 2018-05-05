@@ -74,9 +74,19 @@ RSpec.describe Ego::Handler do
         expect(subject.handle('foo')).to eq(%w[baz bar])
       end
 
-      it 'gracefully handles extra action arguments' do
-        subject = described_class.new(condition, ->(p, q, r) {}, priority)
-        expect { subject.handle('foo') }.not_to raise_error
+      context 'when the condition returns a hash' do
+        it 'gracefully handles extra action arguments' do
+          subject = described_class.new(condition, ->(p, q, r) {}, priority)
+          expect { subject.handle('foo') }.not_to raise_error
+        end
+      end
+
+      context 'when the condition returns a match object' do
+        it 'gracefully handles extra action arguments' do
+          condition = /(?<p>foo|bar)/i
+          subject = described_class.new(condition, ->(p, q) {}, priority)
+          expect { subject.handle('foo') }.not_to raise_error
+        end
       end
     end
   end

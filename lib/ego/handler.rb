@@ -63,7 +63,11 @@ module Ego
       return false unless (result = @condition.call(query))
 
       @action.parameters.each_with_object([]) do |param, arr|
-        arr << result[param.pop]
+        begin
+          arr << result[param.pop]
+        rescue IndexError
+          arr << nil # Match group isn't defined.
+        end
       end
     end
 
